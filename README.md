@@ -42,7 +42,7 @@ Si deseas ejecutar este portafolio localmente para usarlo de referencia, sigue e
 
 Puedes contactarme a través de las siguientes plataformas:
 
-Email: bdvela20@gmail.com
+Email: bdvela@icloud.com
 LinkedIn: https://www.linkedin.com/in/bdvela/
 
 ## Atribuciones

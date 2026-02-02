@@ -43,7 +43,7 @@
             "TITLE": "Technical Consultant",
             "SUBTITLE": "SEIDOR Consulting PERU",
             "TIME": "January 2025 - Present",
-            "DESCRIPTION": "I develop applications in the FIORI environment. I also implement integrations between Microsoft applications such as Power Platform and SAP."
+            "DESCRIPTION": "Consultant specialized in SAP Business Technology Platform (BTP). Development of modern Fiori applications using tools such as SAP Build Code and SAP Build Apps. Implementation of strategic integrations between the SAP ecosystem and Microsoft Power Platform."
         },
         "JOB_2": {
             "TITLE": "Web Developer",
@@ -67,22 +67,22 @@
         "PROJECT_NEW": {
             "TITLE": "Ara Zevallos Studio",
             "SUBTITLE": "Beauty E-commerce & Booking",
-            "DESCRIPTION": "Premium web platform for beauty studio and press-on nails sales. Powered by Next.js 16, Shopify Headless, and fluid Framer Motion animations."
+            "DESCRIPTION": "Premium e-commerce experience for a beauty studio and press-on nails brand. Powered by Next.js 16, Shopify Headless, and fluid Framer Motion animations."
         },
         "PROJECT_1": {
             "TITLE": "Grupo Mofima",
             "SUBTITLE": "Executive Landing Page",
-            "DESCRIPTION": "Landing Page for the law firm Mofima highlighting their experience and services. Emphasis on contacting the company. Fully developed with Astro."
+            "DESCRIPTION": "High-performance corporate website for the Mofima law firm. Designed to highlight their expertise and facilitate client contact. Optimized for speed and SEO with Astro."
         },
         "PROJECT_2": {
             "TITLE": "BEIZZON",
             "SUBTITLE": "Multilevel Team Manager",
-            "DESCRIPTION": "Web application that displays information of teams of 4 people each across 9 sublevels, as well as registering and displaying the monthly earnings of each member. Built from scratch with React JS and Java Springboot."
+            "DESCRIPTION": "Scalable multilevel management platform. Enables visualization of hierarchical team structures (up to 9 sublevels) and automated real-time calculation of monthly commissions. Built with React and Java Springboot."
         },
         "PROJECT_3": {
             "TITLE": "Chiringuito Pizzas & Drinks",
             "SUBTITLE": "Online Store",
-            "DESCRIPTION": "E-commerce website. Includes a Landing Page and restaurant menu. Additionally, incorporates a payment gateway. Built with WordPress."
+            "DESCRIPTION": "Comprehensive gastronomic e-commerce solution. Includes promotional landing page, interactive digital menu, and integrated payment gateway for online orders."
         },
         "PROJECT_4": {
             "TITLE": "CVC RETCAMP 2022",
@@ -92,12 +92,12 @@
         "PROJECT_5": {
             "TITLE": "Diswallet",
             "SUBTITLE": "TCEA Calculator for Invoice Discounting",
-            "DESCRIPTION": "Academic web application to calculate invoice discounting with their respective TCEA according to their type. Built with Vue Js. and hosted on Firebase."
+            "DESCRIPTION": "Financial tool for precise calculation of invoice discounting and TCEA. Built with Vue.js for agile interactivity and Firebase for data management."
         },
         "PROJECT_6": {
             "TITLE": "Task Manager",
             "SUBTITLE": "Task Management",
-            "DESCRIPTION": "Academic web application to create, edit, and delete tasks, as well as mark them as completed. Includes login with your Google account and operates under Firebase services. Built with Vue Js."
+            "DESCRIPTION": "Productivity application for efficient task management. Includes secure Google authentication and real-time synchronization via Firebase."
         }
     },
     "ABOUT": {

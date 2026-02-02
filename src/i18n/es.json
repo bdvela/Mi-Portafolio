@@ -43,7 +43,7 @@
             "TITLE": "Consultor Técnico",
             "SUBTITLE": "SEIDOR Consulting PERÚ",
             "TIME": "Enero 2025 - Actualidad",
-            "DESCRIPTION": "Desarrollo aplicaciones en el entorno FIORI. Además de implementar integraciones entre aplicaciones de Microsoft como Power Platform con SAP."
+            "DESCRIPTION": "Consultor especializado en SAP Business Technology Platform (BTP). Desarrollo de aplicaciones Fiori modernas utilizando herramientas como SAP Build Code y SAP Build Apps. Implementación de integraciones estratégicas entre el ecosistema SAP y Microsoft Power Platform."
         },
         "JOB_2": {
             "TITLE": "Desarrollador Web",
@@ -67,22 +67,22 @@
         "PROJECT_NEW": {
             "TITLE": "Ara Zevallos Studio",
             "SUBTITLE": "E-commerce & Booking Beauty",
-            "DESCRIPTION": "Plataforma web premium para estudio de belleza y venta de press-on nails. Integrada con Shopify Headless y animaciones fluidas."
+            "DESCRIPTION": "Experiencia de comercio electrónico premium para un estudio de belleza y marca de press-on nails. Potenciado por Next.js 16, Shopify Headless y animaciones fluidas con Framer Motion."
         },
         "PROJECT_1": {
             "TITLE": "Grupo Mofima",
             "SUBTITLE": "Landing Page ejecutiva",
-            "DESCRIPTION": "Landing Page para el estudio jurídico Mofima en el que se resalta la experiencia con la que cuentan y los servicios que brindan. Enfatizando en el contacto con la empresa. Trabajado con Astro al 100%"
+            "DESCRIPTION": "Sitio web corporativo de alto rendimiento para el estudio jurídico Mofima. Diseñado para resaltar su experiencia y facilitar el contacto con clientes. Optimizado para velocidad y SEO con Astro."
         },
         "PROJECT_2": {
             "TITLE": "BEIZZON",
             "SUBTITLE": "Gestor de equipos multiniveles",
-            "DESCRIPTION": "Aplicación web que se encarga de mostrar información de equipos de 4 personas en total en un total de 9 subniveles, además de registrar y mostrar las ganancias mensuales por cada miembro. Construida desde cero con React JS y Java Springboot."
+            "DESCRIPTION": "Plataforma de gestión multinivel escalable. Permite la visualización de estructuras de equipos jerárquicos (hasta 9 subniveles) y el cálculo automatizado de comisiones mensuales en tiempo real. Desarrollada con React y Java Springboot."
         },
         "PROJECT_3": {
             "TITLE": "Chiringuito Pizzas & Drinks",
             "SUBTITLE": "Tienda virtual",
-            "DESCRIPTION": "Sitio web e-commerce. Incluye una Landing Page y carta del restaurante. Además de la incorporación de pasarela de pago. Construido con Wordpress."
+            "DESCRIPTION": "Solución integral de e-commerce gastronómico. Incluye landing page promocional, carta digital interactiva y pasarela de pagos integrada para pedidos en línea."
         },
         "PROJECT_4": {
             "TITLE": "CVC RETCAMP 2022",
@@ -92,12 +92,12 @@
         "PROJECT_5": {
             "TITLE": "Diswallet",
             "SUBTITLE": "Calculadora de TCEA en descuento de facturas",
-            "DESCRIPTION": "Aplicación web académica para calcular descuento de facturas con sus respectivas TCEA según su tipo. Construido con Vue Js. y alojada en Firebase."
+            "DESCRIPTION": "Herramienta financiera para el cálculo preciso de descuentos de facturas y TCEA. Desarrollada con Vue.js para una interactividad ágil y Firebase para la gestión de datos."
         },
         "PROJECT_6": {
             "TITLE": "Task Manager",
             "SUBTITLE": "Gestión de tareas",
-            "DESCRIPTION": "Aplicación web académica para crear, editar y eliminar tareas, así mismo como marcarlas como completadas. Incluye un login con tu cuenta de Google y funciona bajo los servicios de Firebase. Construido con Vue Js."
+            "DESCRIPTION": "Aplicación de productividad para la gestión eficiente de tareas. Incluye autenticación segura con Google y sincronización en tiempo real vía Firebase."
         }
     },
     "ABOUT": {

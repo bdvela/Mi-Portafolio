@@ -1,13 +1,13 @@
 ---
-import { getI18N } from '@/i18n';
-import { Icon } from 'astro-icon/components';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import GlassCard from '@/components/ui/GlassCard.astro';
+import { getI18N } from "@/i18n";
+import SectionHeader from "@/components/ui/SectionHeader.astro";
+import ExperienceItem from "@/components/ui/ExperienceItem.astro";
+import type { ExperienceItem as ExperienceItemType } from "@/types";
 
-const {currentLocale} = Astro
-const i18n = getI18N({currentLocale})
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
 
-const EXPERIENCE = [
+const EXPERIENCE: ExperienceItemType[] = [
   {
     date: i18n.EXPERIENCE.JOB_1.TIME,
     title: i18n.EXPERIENCE.JOB_1.TITLE,
@@ -28,16 +28,17 @@ const EXPERIENCE = [
     company: i18n.EXPERIENCE.JOB_3.SUBTITLE,
     description: i18n.EXPERIENCE.JOB_3.DESCRIPTION,
   },
-]
+];
 ---
 
 <section id="experiencia" class="py-32">
   <div class="container max-w-6xl mx-auto px-4">
-    
-    <SectionHeader 
+    <SectionHeader
       badge={i18n.EXPERIENCE.BADGE}
       badgeColor="blue"
-      title={i18n.EXPERIENCE.SECTION_TITLE.replace("Profesional", "").replace("Work", "").trim()}
+      title={i18n.EXPERIENCE.SECTION_TITLE.replace("Profesional", "")
+        .replace("Work", "")
+        .trim()}
       highlight={i18n.EXPERIENCE.TITLE_HIGHLIGHT}
       description={i18n.EXPERIENCE.DESCRIPTION}
     />
@@ -45,63 +46,26 @@ const EXPERIENCE = [
     <!-- Timeline -->
     <div class="relative">
       <!-- Timeline line with animated gradient -->
-      <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px md:-translate-x-1/2">
-        <div class="absolute inset-0 bg-gradient-to-b from-accent-purple via-accent-blue to-accent-cyan"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-accent-purple via-accent-blue to-accent-cyan blur-sm opacity-50"></div>
+      <div
+        class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px md:-translate-x-1/2"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-accent-purple via-accent-blue to-accent-cyan"
+        >
+        </div>
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-accent-purple via-accent-blue to-accent-cyan blur-sm opacity-50"
+        >
+        </div>
       </div>
 
       <div class="space-y-16">
-        {EXPERIENCE.map((job, index) => (
-          <div 
-            class={`relative flex flex-col md:flex-row gap-8 md:gap-16 reveal ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`} 
-            style={`animation-delay: ${index * 150}ms`}
-          >
-            <!-- Timeline dot -->
-            <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-dark-950 ring-4 ring-accent-purple -translate-x-1/2 mt-6 z-10">
-              {job.current && (
-                <span class="absolute inset-0 rounded-full bg-accent-purple animate-ping opacity-50"></span>
-              )}
-            </div>
-
-            <!-- Content -->
-            <div class={`flex-1 ml-12 md:ml-0 ${index % 2 === 0 ? 'md:text-right md:pr-20' : 'md:pl-20'}`}>
-              <GlassCard padding="md">
-                <!-- Date badge -->
-                <div class={`flex ${index % 2 === 0 ? 'md:justify-end' : 'justify-start'}`}>
-                  <span class={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-4
-                    ${job.current 
-                      ? 'bg-green-500/10 text-green-400 border border-green-500/20' 
-                      : 'bg-dark-800/50 text-dark-400 border border-dark-700'
-                    }`}
-                  >
-                    {job.current && (
-                      <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                    )}
-                    {job.date}
-                  </span>
-                </div>
-                
-                <h3 class="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-accent-purple transition-colors">
-                  {job.title}
-                </h3>
-                
-                <p class="text-accent-purple mb-4 font-medium flex items-center gap-2 {index % 2 === 0 ? 'md:justify-end' : ''}">
-                  <Icon name="mdi:office-building" class="size-4" />
-                  {job.company}
-                </p>
-                
-                <p class="text-dark-400 leading-relaxed">
-                  {job.description}
-                </p>
-              </GlassCard>
-            </div>
-
-            <!-- Empty space for timeline alignment -->
-            <div class="hidden md:block flex-1"></div>
-          </div>
-        ))}
+        {
+          EXPERIENCE.map((job, index) => (
+            <ExperienceItem job={job} index={index} />
+          ))
+        }
       </div>
     </div>
-
   </div>
 </section>
