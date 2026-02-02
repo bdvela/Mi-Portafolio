@@ -1,0 +1,142 @@
+{
+    "HERO": {
+        "SHORT_DESCRIPTION": "Web Developer",
+        "LONG_DESCRIPTION": "I develop <strong>custom web solutions for those looking to boost their digital presence</strong> and reach new clients. <br> 🚀 <strong>Take your business to the next level</strong> with attractive and functional websites.",
+        "CTA": "Contact Me",
+        "LINK_CTA": "https://api.whatsapp.com/send?phone=51972179130&text=Hello,%20I%20am%20interested%20in%20acquiring%20a%20website%20to%20boost%20my%20business/personal%20brand.",
+        "CV": "CV_VELA_BRYAN_EN.pdf",
+        "ALT": "Download Resume",
+        "STATUS_AVAILABLE": "Available for projects",
+        "ROLE_PART_1": "Web Developer turning ideas into",
+        "ROLE_PART_2": "digital experiences",
+        "ROLE_PART_3": "that drive business.",
+        "DOWNLOAD_CV": "Download CV",
+        "STATS": {
+            "YEARS": "Years of experience",
+            "PROJECTS": "Projects completed",
+            "CLIENTS": "Satisfied clients"
+        }
+    },
+    "TECH_STACK": {
+        "TITLE": "Technologies I master to create exceptional experiences"
+    },
+    "TESTIMONIALS": {
+        "TITLE": "What my clients say",
+        "SUBTITLE": "Trust",
+        "REVIEW_1": "Bryan completely transformed our digital presence. His attention to detail and technical potential are exceptional.",
+        "AUTHOR_1": "General Manager",
+        "COMPANY_1": "Grupo Mofima",
+        "REVIEW_2": "The system he developed for our multilevel team exceeded all expectations. Highly recommended.",
+        "AUTHOR_2": "CEO",
+        "COMPANY_2": "Beizzon",
+        "REVIEW_3": "Thanks to the new online store, our sales have increased significantly. An A1 professional.",
+        "AUTHOR_3": "Owner",
+        "COMPANY_3": "Chiringuito"
+    },
+    "EXPERIENCE": {
+        "SECTION_TITLE": "Work Experience",
+        "XP_BUTTON": "Learn More",
+        "BADGE": "Career",
+        "TITLE_HIGHLIGHT": "Experience",
+        "DESCRIPTION": "A journey through my professional evolution in web development and technology.",
+        "JOB_1": {
+            "TITLE": "Technical Consultant",
+            "SUBTITLE": "SEIDOR Consulting PERU",
+            "TIME": "January 2025 - Present",
+            "DESCRIPTION": "I develop applications in the FIORI environment. I also implement integrations between Microsoft applications such as Power Platform and SAP."
+        },
+        "JOB_2": {
+            "TITLE": "Web Developer",
+            "SUBTITLE": "Freelance",
+            "TIME": "Currently...",
+            "DESCRIPTION": "I develop websites for individuals and businesses interested in improving their digital presence through effective web solutions, implementing modern development practices."
+        },
+        "JOB_3": {
+            "TITLE": "Junior BTP Consultant",
+            "SUBTITLE": "CSTI Corp.",
+            "TIME": "January 2023 - January 2025",
+            "DESCRIPTION": "Development, maintenance, and optimization of web applications for clients both nationally and internationally as a Fullstack programmer, with a primary focus on the frontend using SAPUI5."
+        }
+    },
+    "PROJECTS": {
+        "SECTION_TITLE": "Projects",
+        "BADGE": "Portfolio",
+        "TITLE_HIGHLIGHT": "Featured",
+        "DESCRIPTION": "A selection of projects that demonstrate my passion for creating exceptional digital experiences.",
+        "VIEW_PROJECT": "View project",
+        "PROJECT_NEW": {
+            "TITLE": "Ara Zevallos Studio",
+            "SUBTITLE": "Beauty E-commerce & Booking",
+            "DESCRIPTION": "Premium web platform for beauty studio and press-on nails sales. Powered by Next.js 16, Shopify Headless, and fluid Framer Motion animations."
+        },
+        "PROJECT_1": {
+            "TITLE": "Grupo Mofima",
+            "SUBTITLE": "Executive Landing Page",
+            "DESCRIPTION": "Landing Page for the law firm Mofima highlighting their experience and services. Emphasis on contacting the company. Fully developed with Astro."
+        },
+        "PROJECT_2": {
+            "TITLE": "BEIZZON",
+            "SUBTITLE": "Multilevel Team Manager",
+            "DESCRIPTION": "Web application that displays information of teams of 4 people each across 9 sublevels, as well as registering and displaying the monthly earnings of each member. Built from scratch with React JS and Java Springboot."
+        },
+        "PROJECT_3": {
+            "TITLE": "Chiringuito Pizzas & Drinks",
+            "SUBTITLE": "Online Store",
+            "DESCRIPTION": "E-commerce website. Includes a Landing Page and restaurant menu. Additionally, incorporates a payment gateway. Built with WordPress."
+        },
+        "PROJECT_4": {
+            "TITLE": "CVC RETCAMP 2022",
+            "SUBTITLE": "Event",
+            "DESCRIPTION": "Landing page for the most renowned Christian camp in the region. Inspires visitors to register and participate in this event. Built with FullPage.js."
+        },
+        "PROJECT_5": {
+            "TITLE": "Diswallet",
+            "SUBTITLE": "TCEA Calculator for Invoice Discounting",
+            "DESCRIPTION": "Academic web application to calculate invoice discounting with their respective TCEA according to their type. Built with Vue Js. and hosted on Firebase."
+        },
+        "PROJECT_6": {
+            "TITLE": "Task Manager",
+            "SUBTITLE": "Task Management",
+            "DESCRIPTION": "Academic web application to create, edit, and delete tasks, as well as mark them as completed. Includes login with your Google account and operates under Firebase services. Built with Vue Js."
+        }
+    },
+    "ABOUT": {
+        "SECTION_TITLE": "About Me",
+        "BADGE": "About me",
+        "TITLE_PART_1": "Passionate about creating",
+        "TITLE_HIGHLIGHT": "digital experiences",
+        "TITLE_PART_2": "that make an impact",
+        "DESCRIPTION_1": "I am <strong class=\"text-white font-semibold\">Bryan Vela</strong>, a <strong>Software Engineering</strong> graduate from the <strong class=\"text-accent-purple\">Peruvian University of Applied Sciences (UPC)</strong>.",
+        "DESCRIPTION_2": "With over <strong class=\"text-white font-semibold\">5 years of experience</strong>, I have worked on projects ranging from landing pages to enterprise systems with <strong class=\"text-accent-blue\">SAP</strong>.",
+        "DESCRIPTION_3": "I combine <strong class=\"text-accent-cyan\">technical development</strong> with an eye for design, creating solutions that not only work but <em class=\"text-white not-italic\">inspire</em>.",
+        "SKILLS": {
+            "FRONTEND": "Frontend",
+            "BACKEND": "Backend",
+            "SAP": "SAP/FIORI",
+            "UIUX": "UI/UX"
+        },
+        "HIGHLIGHTS": {
+            "TROPHY": "1st Place",
+            "TROPHY_SUB": "ULATINHACK 2022",
+            "DEGREE": "Soft. Engineer",
+            "DEGREE_SUB": "UPC Lima"
+        },
+        "VALUES": {
+            "FAITH_CODE": "Faith & Code",
+            "LOCATION": "Lima, Peru"
+        }
+    },
+    "FOOTER": {
+        "GO_TO_HOME": "Back to top",
+        "CONTACT": "Contact",
+        "CTA_BADGE": "Have a project?",
+        "CTA_TITLE_PART_1": "Let's build something",
+        "CTA_TITLE_HIGHLIGHT": "amazing together",
+        "CTA_DESCRIPTION": "Whether it's a personal project or for your business, I'm here to make it happen.",
+        "BUTTON_WHATSAPP": "Let's talk on WhatsApp",
+        "BUTTON_EMAIL": "Send email",
+        "ROLE": "Web Developer",
+        "MADE_WITH": "Made with",
+        "IN_PERU": "Peru"
+    }
+}

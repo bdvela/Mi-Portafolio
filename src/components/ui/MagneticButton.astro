@@ -1,0 +1,98 @@
+---
+/**
+ * MagneticButton Component
+ * Creates a button with magnetic cursor attraction effect
+ */
+interface Props {
+    href?: string;
+    class?: string;
+    variant?: "primary" | "secondary" | "ghost";
+    size?: "sm" | "md" | "lg";
+}
+
+const {
+    href,
+    class: className = "",
+    variant = "primary",
+    size = "md",
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+const variants = {
+    primary:
+        "bg-white text-dark-950 hover:bg-accent-purple hover:text-white shadow-glow-sm hover:shadow-glow",
+    secondary:
+        "bg-dark-800 text-white border border-dark-600 hover:border-accent-purple hover:bg-accent-purple/10",
+    ghost: "text-dark-300 hover:text-white hover:bg-dark-800/50",
+};
+
+const sizes = {
+    sm: "px-4 py-2 text-sm",
+    md: "px-6 py-3 text-base",
+    lg: "px-8 py-4 text-lg",
+};
+---
+
+<Tag
+    href={href}
+    class={`magnetic-btn relative inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all duration-300 ${variants[variant]} ${sizes[size]} ${className}`}
+    target={href?.startsWith("http") ? "_blank" : undefined}
+    rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+>
+    <span class="magnetic-content relative z-10 flex items-center gap-2">
+        <slot />
+    </span>
+    <span class="magnetic-ripple absolute inset-0 rounded-full opacity-0"
+    ></span>
+</Tag>
+
+<style>
+    .magnetic-btn {
+        transform-style: preserve-3d;
+        perspective: 500px;
+    }
+
+    .magnetic-content {
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .magnetic-ripple {
+        background: radial-gradient(
+            circle,
+            rgba(168, 85, 247, 0.3) 0%,
+            transparent 70%
+        );
+        transition: opacity 0.3s ease;
+    }
+
+    .magnetic-btn:hover .magnetic-ripple {
+        opacity: 1;
+    }
+</style>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const buttons = document.querySelectorAll(".magnetic-btn");
+
+        buttons.forEach((btn) => {
+            const content = btn.querySelector(
+                ".magnetic-content",
+            ) as HTMLElement;
+            if (!content) return;
+
+            btn.addEventListener("mousemove", (e: Event) => {
+                const event = e as MouseEvent;
+                const rect = (btn as HTMLElement).getBoundingClientRect();
+                const x = event.clientX - rect.left - rect.width / 2;
+                const y = event.clientY - rect.top - rect.height / 2;
+
+                content.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            btn.addEventListener("mouseleave", () => {
+                content.style.transform = "translate(0, 0)";
+            });
+        });
+    });
+</script>

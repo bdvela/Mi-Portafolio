@@ -1,0 +1,13 @@
+---
+const { class: className, ...rest } = Astro.props;
+---
+
+<a
+  {...rest}
+  target="_blank"
+  rel="noopener noreferrer"
+  role="link"
+  class={`inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 ${className || "text-gray-700 bg-white/80 dark:bg-gray-800/80 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm hover:shadow-md"}`}
+>
+  <slot />
+</a>

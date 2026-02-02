@@ -1,0 +1,87 @@
+---
+/**
+ * GlassCard Component
+ * Reusable glassmorphism card with hover effects
+ */
+interface Props {
+    class?: string;
+    hover?: boolean;
+    gradient?: string;
+    padding?: "sm" | "md" | "lg" | "none";
+}
+
+const {
+    class: className = "",
+    hover = true,
+    gradient,
+    padding = "md",
+} = Astro.props;
+
+const paddings = {
+    none: "",
+    sm: "p-4",
+    md: "p-6 md:p-8",
+    lg: "p-8 md:p-12",
+};
+---
+
+<div
+    class={`glass-card group relative overflow-hidden rounded-3xl ${paddings[padding]} ${className}`}
+>
+    <!-- Background gradient on hover -->
+    {
+        gradient && (
+            <div
+                class={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+            />
+        )
+    }
+
+    <!-- Content -->
+    <div class="relative z-10">
+        <slot />
+    </div>
+
+    <!-- Shine effect on hover -->
+    {
+        hover && (
+            <div class="shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        )
+    }
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+        border-color: rgba(168, 85, 247, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .shine {
+        background: linear-gradient(
+            135deg,
+            transparent 20%,
+            rgba(255, 255, 255, 0.03) 40%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(255, 255, 255, 0.03) 60%,
+            transparent 80%
+        );
+        background-size: 200% 200%;
+        animation: shine-move 3s ease-in-out infinite;
+    }
+
+    @keyframes shine-move {
+        0% {
+            background-position: 200% 200%;
+        }
+        100% {
+            background-position: -200% -200%;
+        }
+    }
+</style>

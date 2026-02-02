@@ -1,0 +1,45 @@
+---
+/**
+ * SectionHeader Component
+ * Consistent section headers with badge, title, and description
+ */
+interface Props {
+    badge: string;
+    badgeColor?: "purple" | "blue" | "cyan" | "pink";
+    title: string;
+    highlight: string;
+    description?: string;
+}
+
+const {
+    badge,
+    badgeColor = "purple",
+    title,
+    highlight,
+    description,
+} = Astro.props;
+
+const colors = {
+    purple: "bg-accent-purple/10 border-accent-purple/20 text-accent-purple",
+    blue: "bg-accent-blue/10 border-accent-blue/20 text-accent-blue",
+    cyan: "bg-accent-cyan/10 border-accent-cyan/20 text-accent-cyan",
+    pink: "bg-accent-pink/10 border-accent-pink/20 text-accent-pink",
+};
+---
+
+<div class="text-center mb-20 reveal">
+    <span
+        class={`inline-block px-4 py-2 rounded-full border text-sm font-medium mb-6 ${colors[badgeColor]}`}
+    >
+        {badge}
+    </span>
+    <h2 class="text-4xl md:text-6xl font-bold mb-6">
+        {title}
+        <span class="gradient-text">{highlight}</span>
+    </h2>
+    {
+        description && (
+            <p class="text-lg text-dark-400 max-w-2xl mx-auto">{description}</p>
+        )
+    }
+</div>

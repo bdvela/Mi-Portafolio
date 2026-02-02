@@ -1,0 +1,118 @@
+---
+/**
+ * TechStack Component
+ * Visual showcase of technologies with animated icons
+ */
+import { Icon } from "astro-icon/components";
+import { getI18N } from "@/i18n";
+
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+
+const technologies = [
+    { name: "React", icon: "mdi:react", color: "#61DAFB" },
+    { name: "Vue.js", icon: "mdi:vuejs", color: "#4FC08D" },
+    { name: "Astro", icon: "astro", color: "#FF5D01" },
+    { name: "TypeScript", icon: "mdi:language-typescript", color: "#3178C6" },
+    { name: "JavaScript", icon: "mdi:language-javascript", color: "#F7DF1E" },
+    { name: "Node.js", icon: "mdi:nodejs", color: "#339933" },
+    { name: "Java", icon: "mdi:language-java", color: "#ED8B00" },
+    { name: "Spring", icon: "mdi:leaf", color: "#6DB33F" },
+    { name: "Tailwind", icon: "mdi:tailwind", color: "#06B6D4" },
+    { name: "SAP UI5", icon: "mdi:office-building", color: "#0FAAFF" },
+    { name: "Firebase", icon: "mdi:firebase", color: "#FFCA28" },
+    { name: "Figma", icon: "figma", color: "#F24E1E" },
+];
+---
+
+<section class="py-20 overflow-hidden">
+    <div class="container max-w-6xl mx-auto px-4 mb-12">
+        <p class="text-center text-dark-400 text-lg">
+            {i18n.TECH_STACK.TITLE}
+        </p>
+    </div>
+
+    <!-- First row - left to right -->
+    <div class="relative mb-4">
+        <div class="flex animate-marquee">
+            {
+                [...technologies, ...technologies].map((tech) => (
+                    <div class="tech-item flex items-center gap-3 mx-4 px-6 py-3 rounded-2xl bg-dark-900/50 border border-dark-800 hover:border-accent-purple/30 transition-all duration-300 group cursor-default">
+                        {tech.icon === "astro" || tech.icon === "figma" ? (
+                            <Icon
+                                name={tech.icon}
+                                class="size-6"
+                                style={`color: ${tech.color}`}
+                            />
+                        ) : (
+                            <Icon
+                                name={tech.icon}
+                                class="size-6"
+                                style={`color: ${tech.color}`}
+                            />
+                        )}
+                        <span class="text-dark-300 group-hover:text-white transition-colors whitespace-nowrap font-medium">
+                            {tech.name}
+                        </span>
+                    </div>
+                ))
+            }
+        </div>
+        <!-- Fade edges -->
+        <div
+            class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-dark-950 to-transparent pointer-events-none z-10"
+        >
+        </div>
+        <div
+            class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-dark-950 to-transparent pointer-events-none z-10"
+        >
+        </div>
+    </div>
+
+    <!-- Second row - right to left -->
+    <div class="relative">
+        <div class="flex animate-marquee-reverse">
+            {
+                [
+                    ...technologies.slice().reverse(),
+                    ...technologies.slice().reverse(),
+                ].map((tech) => (
+                    <div class="tech-item flex items-center gap-3 mx-4 px-6 py-3 rounded-2xl bg-dark-900/50 border border-dark-800 hover:border-accent-blue/30 transition-all duration-300 group cursor-default">
+                        {tech.icon === "astro" || tech.icon === "figma" ? (
+                            <Icon
+                                name={tech.icon}
+                                class="size-6"
+                                style={`color: ${tech.color}`}
+                            />
+                        ) : (
+                            <Icon
+                                name={tech.icon}
+                                class="size-6"
+                                style={`color: ${tech.color}`}
+                            />
+                        )}
+                        <span class="text-dark-300 group-hover:text-white transition-colors whitespace-nowrap font-medium">
+                            {tech.name}
+                        </span>
+                    </div>
+                ))
+            }
+        </div>
+        <!-- Fade edges -->
+        <div
+            class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-dark-950 to-transparent pointer-events-none z-10"
+        >
+        </div>
+        <div
+            class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-dark-950 to-transparent pointer-events-none z-10"
+        >
+        </div>
+    </div>
+</section>
+
+<style>
+    .tech-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2);
+    }
+</style>

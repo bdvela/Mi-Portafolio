@@ -1,0 +1,348 @@
+---
+import "@fontsource-variable/onest";
+
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import LoadingScreen from "../components/LoadingScreen.astro";
+import { ViewTransitions } from "astro:transitions";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const { currentLocale } = Astro;
+---
+
+<!doctype html>
+<html lang={currentLocale} class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+
+  <body class="relative bg-dark-950 text-white antialiased overflow-x-hidden">
+    <!-- Loading Screen -->
+    <LoadingScreen />
+
+    <!-- Animated Background -->
+    <div
+      class="fixed inset-0 z-0 overflow-hidden pointer-events-none"
+      id="bg-container"
+    >
+      <!-- Primary gradient orb with parallax -->
+      <div
+        class="parallax-orb absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full
+          bg-gradient-to-br from-accent-purple/20 via-accent-blue/10 to-transparent
+          blur-3xl opacity-60"
+        data-speed="0.02"
+      >
+      </div>
+
+      <!-- Secondary orb -->
+      <div
+        class="parallax-orb absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full
+          bg-gradient-to-tl from-accent-cyan/15 via-accent-purple/10 to-transparent
+          blur-3xl opacity-50"
+        data-speed="0.03"
+      >
+      </div>
+
+      <!-- Accent orb -->
+      <div
+        class="parallax-orb absolute top-[40%] right-[10%] w-[30vw] h-[30vw] rounded-full
+          bg-gradient-to-bl from-accent-pink/10 to-transparent
+          blur-3xl opacity-40"
+        data-speed="0.015"
+      >
+      </div>
+
+      <!-- Noise overlay for texture -->
+      <div class="absolute inset-0 bg-noise opacity-[0.02] mix-blend-overlay">
+      </div>
+
+      <!-- Subtle grid pattern -->
+      <div
+        class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]"
+      >
+      </div>
+    </div>
+
+    <!-- Cursor glow effect (Desktop only) -->
+    <div
+      id="cursor-glow"
+      class="fixed w-[600px] h-[600px] rounded-full pointer-events-none z-0
+      bg-gradient-radial from-accent-purple/8 via-accent-purple/3 to-transparent
+      blur-3xl opacity-0 transition-opacity duration-500"
+    >
+    </div>
+
+    <Header />
+
+    <main class="relative z-10">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <style is:global>
+      :root {
+        color-scheme: dark;
+        --accent-purple: #a855f7;
+        --accent-blue: #3b82f6;
+        --accent-cyan: #06b6d4;
+        --accent-pink: #ec4899;
+      }
+
+      html {
+        font-family: "Onest Variable", system-ui, sans-serif;
+        /* Lenis handles scrolling */
+        scroll-behavior: auto;
+      }
+
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overscroll-behavior: none;
+      }
+
+      /* Optimized scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+          to bottom,
+          var(--accent-purple),
+          var(--accent-blue)
+        );
+        border-radius: 3px;
+      }
+
+      /* Text selection */
+      ::selection {
+        background: rgba(168, 85, 247, 0.3);
+        color: white;
+      }
+
+      /* Gradient text utility */
+      .gradient-text {
+        background: linear-gradient(135deg, #a855f7, #3b82f6, #06b6d4);
+        background-size: 200% 200%;
+        animation: gradient-shift 8s ease infinite;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      @keyframes gradient-shift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Glass effect utility */
+      .glass {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Reveal animation */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Stagger children */
+      .stagger-children > * {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .stagger-children.active > * {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .stagger-children.active > *:nth-child(1) {
+        transition-delay: 0ms;
+      }
+      .stagger-children.active > *:nth-child(2) {
+        transition-delay: 100ms;
+      }
+      .stagger-children.active > *:nth-child(3) {
+        transition-delay: 200ms;
+      }
+      .stagger-children.active > *:nth-child(4) {
+        transition-delay: 300ms;
+      }
+      .stagger-children.active > *:nth-child(5) {
+        transition-delay: 400ms;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+        .reveal,
+        .stagger-children > * {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script is:inline>
+      // Initialize Lenis
+      const initLenis = () => {
+        if (typeof Lenis === "undefined") return;
+
+        const lenis = new Lenis({
+          lerp: 0.1, // Lower values = smoother/slower effect
+          smoothWheel: true,
+        });
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+      };
+
+      // Run on initial load
+      if (document.readyState === "complete") {
+        initLenis();
+      } else {
+        window.addEventListener("load", initLenis);
+      }
+
+      // Re-init on astro page transitions
+      document.addEventListener("astro:page-load", initLenis);
+    </script>
+
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        // Cursor glow effect (Desktop only)
+        const cursorGlow = document.getElementById("cursor-glow");
+        if (cursorGlow && window.matchMedia("(pointer: fine)").matches) {
+          let mouseX = 0,
+            mouseY = 0;
+          let currentX = 0,
+            currentY = 0;
+
+          document.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.style.opacity = "1";
+          });
+
+          document.addEventListener("mouseleave", () => {
+            cursorGlow.style.opacity = "0";
+          });
+
+          function animateCursor() {
+            currentX += (mouseX - currentX) * 0.08;
+            currentY += (mouseY - currentY) * 0.08;
+
+            cursorGlow.style.left = `${currentX - 300}px`;
+            cursorGlow.style.top = `${currentY - 300}px`;
+
+            requestAnimationFrame(animateCursor);
+          }
+          animateCursor();
+        }
+
+        // Parallax orbs on scroll
+        const orbs = document.querySelectorAll(".parallax-orb");
+        let scrollY = 0;
+
+        function updateParallax() {
+          scrollY = window.scrollY;
+          orbs.forEach((orb) => {
+            const speed = parseFloat(
+              (orb as HTMLElement).dataset.speed || "0.02",
+            );
+            (orb as HTMLElement).style.transform =
+              `translateY(${scrollY * speed * 100}px)`;
+          });
+        }
+
+        window.addEventListener("scroll", updateParallax, { passive: true });
+
+        // Reveal on scroll with stagger
+        const reveals = document.querySelectorAll(".reveal, .stagger-children");
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -80px 0px",
+          },
+        );
+
+        reveals.forEach((el) => revealObserver.observe(el));
+      });
+    </script>
+  </body>
+</html>

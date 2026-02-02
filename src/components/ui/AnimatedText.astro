@@ -1,0 +1,55 @@
+---
+/**
+ * AnimatedText Component
+ * Reveals text with a staggered animation effect
+ */
+interface Props {
+    text: string;
+    class?: string;
+    tag?: "h1" | "h2" | "h3" | "p" | "span";
+    delay?: number;
+    gradient?: boolean;
+}
+
+const {
+    text,
+    class: className = "",
+    tag = "span",
+    delay = 0,
+    gradient = false,
+} = Astro.props;
+
+const Tag = tag;
+const words = text.split(" ");
+---
+
+<Tag class={`animated-text ${className}`} style={`--delay: ${delay}ms`}>
+    {
+        words.map((word, i) => (
+            <span class="word-wrapper inline-block overflow-hidden">
+                <span
+                    class={`word inline-block ${gradient ? "gradient-text" : ""}`}
+                    style={`--index: ${i}`}
+                >
+                    {word}&nbsp;
+                </span>
+            </span>
+        ))
+    }
+</Tag>
+
+<style>
+    .animated-text .word {
+        opacity: 0;
+        transform: translateY(100%);
+        animation: word-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--delay) + (var(--index) * 50ms));
+    }
+
+    @keyframes word-reveal {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

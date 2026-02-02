@@ -1,0 +1,172 @@
+---
+import { Icon } from "astro-icon/components";
+import { getI18N } from "@/i18n";
+import GlassCard from "@/components/ui/GlassCard.astro";
+
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+
+const skills = [
+  {
+    label: i18n.ABOUT.SKILLS.FRONTEND,
+    icon: "mdi:palette",
+    color: "accent-purple",
+  },
+  {
+    label: i18n.ABOUT.SKILLS.BACKEND,
+    icon: "mdi:database",
+    color: "accent-blue",
+  },
+  {
+    label: i18n.ABOUT.SKILLS.SAP,
+    icon: "mdi:office-building",
+    color: "accent-cyan",
+  },
+  { label: i18n.ABOUT.SKILLS.UIUX, icon: "mdi:brush", color: "accent-pink" },
+];
+
+const highlights = [
+  {
+    icon: "mdi:trophy",
+    title: i18n.ABOUT.HIGHLIGHTS.TROPHY,
+    subtitle: i18n.ABOUT.HIGHLIGHTS.TROPHY_SUB,
+  },
+  {
+    icon: "mdi:school",
+    title: i18n.ABOUT.HIGHLIGHTS.DEGREE,
+    subtitle: i18n.ABOUT.HIGHLIGHTS.DEGREE_SUB,
+  },
+];
+---
+
+<section id="sobre-mi" class="py-32">
+  <div class="container max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+      <!-- Image Column -->
+      <div class="lg:col-span-2 reveal">
+        <div class="relative group sticky top-32">
+          <!-- Decorative blurs -->
+          <div
+            class="absolute -inset-8 bg-gradient-to-br from-accent-purple/20 via-accent-blue/10 to-accent-cyan/20 rounded-[3rem] blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700"
+          >
+          </div>
+
+          <!-- Main image container -->
+          <div
+            class="relative overflow-hidden rounded-3xl border border-dark-700/50"
+          >
+            <img
+              src="/bdvela.webp"
+              alt="Bryan Vela"
+              class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+
+            <!-- Gradient overlay -->
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-transparent opacity-70"
+            >
+            </div>
+
+            <!-- Highlight badges -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 space-y-3">
+              {
+                highlights.map((item) => (
+                  <GlassCard class="!rounded-xl" padding="sm">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center shrink-0">
+                        <Icon
+                          name={item.icon}
+                          class="size-5 text-accent-purple"
+                        />
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold text-white truncate">
+                          {item.title}
+                        </p>
+                        <p class="text-xs text-dark-400 truncate">
+                          {item.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Decorative corner lines -->
+          <div
+            class="absolute -top-4 -right-4 w-24 h-24 border-t-2 border-r-2 border-accent-purple/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+          </div>
+          <div
+            class="absolute -bottom-4 -left-4 w-24 h-24 border-b-2 border-l-2 border-accent-cyan/30 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Column -->
+      <div class="lg:col-span-3 reveal" style="animation-delay: 200ms">
+        <!-- Badge -->
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-sm font-medium mb-6"
+        >
+          {i18n.ABOUT.BADGE}
+        </span>
+
+        <!-- Heading -->
+        <h2 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+          {i18n.ABOUT.TITLE_PART_1}
+          <span class="gradient-text block sm:inline"
+            >{i18n.ABOUT.TITLE_HIGHLIGHT}</span
+          >
+          <span class="text-dark-400">{i18n.ABOUT.TITLE_PART_2}</span>
+        </h2>
+
+        <!-- Bio text -->
+        <div class="space-y-6 text-lg text-dark-300 leading-relaxed mb-10">
+          <p set:html={i18n.ABOUT.DESCRIPTION_1} />
+          <p set:html={i18n.ABOUT.DESCRIPTION_2} />
+          <p set:html={i18n.ABOUT.DESCRIPTION_3} />
+        </div>
+
+        <!-- Skills grid -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10 stagger-children"
+        >
+          {
+            skills.map((skill) => (
+              <GlassCard class="text-center" padding="md">
+                <div
+                  class={`w-12 h-12 rounded-xl bg-${skill.color}/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}
+                >
+                  <Icon
+                    name={skill.icon}
+                    class={`size-6 text-${skill.color}`}
+                  />
+                </div>
+                <span class="text-sm text-dark-300 font-medium">
+                  {skill.label}
+                </span>
+              </GlassCard>
+            ))
+          }
+        </div>
+
+        <!-- Personal values -->
+        <div class="flex items-center gap-6 text-dark-500">
+          <div class="flex items-center gap-2">
+            <Icon name="jesus" class="size-5" />
+            <span>{i18n.ABOUT.VALUES.FAITH_CODE}</span>
+          </div>
+          <div class="w-px h-4 bg-dark-700"></div>
+          <div class="flex items-center gap-2">
+            <span>🇵🇪</span>
+            <span>{i18n.ABOUT.VALUES.LOCATION}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

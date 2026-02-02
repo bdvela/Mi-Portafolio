@@ -1,0 +1,85 @@
+---
+import { languages } from "@/i18n/ui";
+import { Icon } from "astro-icon/components";
+import {
+  getLangFromUrl,
+  useTranslatedPath,
+  useTranslations,
+} from "@/i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+
+<div class="relative group language-picker">
+  <button
+    id="language-toggle-btn"
+    class="flex items-center gap-2 px-3 py-2 rounded-full text-sm text-dark-400 hover:text-white hover:bg-dark-800 transition-all duration-300"
+    aria-label="Change language"
+  >
+    <Icon name="mdi:translate" class="size-4" />
+    <span class="uppercase font-medium">{lang}</span>
+    <Icon
+      name="mdi:chevron-down"
+      class="size-3 group-hover:rotate-180 transition-transform duration-300"
+    />
+  </button>
+
+  <div
+    id="languages-menu"
+    class="absolute hidden group-hover:block pt-2 top-full right-0 min-w-[10rem] z-50 origin-top-right transform transition-all duration-200"
+  >
+    <div
+      class="rounded-xl overflow-hidden bg-dark-900/95 backdrop-blur-xl border border-dark-700/50 shadow-xl shadow-dark-950/50 p-1"
+    >
+      <ul class="flex flex-col">
+        {
+          Object.entries(languages).map(([code, label]) => (
+            <li>
+              <a
+                href={translatePath("/", code)}
+                class={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200
+                ${
+                  lang === code
+                    ? "bg-accent-purple/20 text-accent-purple"
+                    : "text-dark-300 hover:bg-dark-800 hover:text-white"
+                }`}
+              >
+                {lang === code ? (
+                  <Icon name="mdi:check" class="size-4" />
+                ) : (
+                  <span class="w-4" />
+                )}
+                <span>{label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fallback for hover if JS fails, but we also want click support on mobile */
+  @media (hover: hover) {
+    .language-picker:hover #languages-menu {
+      display: block;
+      animation: dropdown-in 0.2s ease-out both;
+    }
+  }
+
+  /* Support for click toggle via CSS checking helper class if needed, checking group-focus-within might be better for utility */
+
+  @keyframes dropdown-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>

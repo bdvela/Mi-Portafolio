@@ -1,0 +1,204 @@
+---
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
+import LanguagePicker from "@/components/LanguagePicker.astro";
+import { Icon } from "astro-icon/components";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const navItems = [
+  { title: t("header.experience"), url: "#experiencia" },
+  { title: t("header.projects"), url: "#proyectos" },
+  { title: t("header.about"), url: "#sobre-mi" },
+];
+---
+
+<header
+  class="fixed top-0 left-0 right-0 z-50 px-4 py-4 md:py-6 transition-all duration-300"
+  id="main-header"
+>
+  <nav class="container max-w-6xl mx-auto flex items-center justify-between">
+    <!-- Logo -->
+    <a
+      href="/"
+      class="text-xl font-bold hover:opacity-70 transition-opacity relative z-50"
+    >
+      <span class="gradient-text">bdvela</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div
+      class="hidden md:flex items-center gap-1 px-2 py-2 rounded-full bg-dark-900/50 backdrop-blur-xl border border-dark-700/50"
+    >
+      {
+        navItems.map((link) => (
+          <a
+            href={link.url}
+            class="nav-link px-4 py-2 rounded-full text-sm text-dark-300 hover:text-white hover:bg-dark-800/50 transition-all duration-300"
+          >
+            {link.title}
+          </a>
+        ))
+      }
+    </div>
+
+    <!-- Desktop Actions -->
+    <div class="hidden md:flex items-center gap-4">
+      <a
+        href="mailto:bdvela20@gmail.com"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+          bg-white text-dark-950 hover:bg-accent-purple hover:text-white transition-all duration-300"
+      >
+        {t("header.contact")}
+      </a>
+      <LanguagePicker />
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden relative z-50 w-10 h-10 flex items-center justify-center rounded-xl bg-dark-800/50 backdrop-blur-sm border border-dark-700"
+      aria-label="Toggle menu"
+    >
+      <div class="hamburger-icon w-5 h-4 flex flex-col justify-between">
+        <span
+          class="hamburger-line w-full h-0.5 bg-white rounded-full transition-all duration-300 origin-left"
+        ></span>
+        <span
+          class="hamburger-line w-full h-0.5 bg-white rounded-full transition-all duration-300"
+        ></span>
+        <span
+          class="hamburger-line w-full h-0.5 bg-white rounded-full transition-all duration-300 origin-left"
+        ></span>
+      </div>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 bg-dark-950/98 backdrop-blur-xl z-40 opacity-0 invisible transition-all duration-500 md:hidden"
+  >
+    <div class="flex flex-col items-center justify-center h-full gap-8">
+      {
+        navItems.map((link, i) => (
+          <a
+            href={link.url}
+            class="mobile-nav-link text-4xl font-bold text-dark-300 hover:text-white transition-all duration-300 opacity-0 translate-y-8"
+            style={`transition-delay: ${i * 100}ms`}
+          >
+            {link.title}
+          </a>
+        ))
+      }
+
+      <div
+        class="flex items-center gap-6 mt-8 opacity-0 translate-y-8 mobile-nav-link"
+        style="transition-delay: 300ms"
+      >
+        <a
+          href="mailto:bdvela20@gmail.com"
+          class="px-6 py-3 rounded-full text-lg font-medium bg-white text-dark-950"
+        >
+          {t("header.contact")}
+        </a>
+        <LanguagePicker />
+      </div>
+
+      <!-- Decorative elements -->
+      <div
+        class="absolute bottom-10 left-1/2 -translate-x-1/2 text-dark-700 text-sm"
+      >
+        © 2024 Bryan Vela
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Header scroll styles */
+  #main-header.scrolled {
+    @apply bg-dark-950/80 backdrop-blur-xl border-b border-dark-800/50 py-3;
+  }
+
+  /* Hamburger animation */
+  #mobile-menu-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translateY(6px);
+  }
+  #mobile-menu-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  #mobile-menu-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translateY(-6px);
+  }
+
+  /* Mobile menu open state */
+  #mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  #mobile-menu.open .mobile-nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const header = document.getElementById("main-header");
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const navLinks = document.querySelectorAll(".nav-link");
+    const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+    // Header scroll effect
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        header?.classList.add("scrolled");
+      } else {
+        header?.classList.remove("scrolled");
+      }
+    });
+
+    // Mobile menu toggle
+    menuBtn?.addEventListener("click", () => {
+      menuBtn.classList.toggle("active");
+      mobileMenu?.classList.toggle("open");
+      document.body.style.overflow = mobileMenu?.classList.contains("open")
+        ? "hidden"
+        : "";
+    });
+
+    // Close mobile menu on link click
+    mobileLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        menuBtn?.classList.remove("active");
+        mobileMenu?.classList.remove("open");
+        document.body.style.overflow = "";
+      });
+    });
+
+    // Active section tracking for desktop nav
+    const sections = document.querySelectorAll("section[id]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            navLinks.forEach((link) => {
+              const href = link.getAttribute("href");
+              if (href === `#${entry.target.id}`) {
+                link.classList.add("bg-dark-800/50", "text-white");
+              } else {
+                link.classList.remove("bg-dark-800/50", "text-white");
+              }
+            });
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  });
+</script>

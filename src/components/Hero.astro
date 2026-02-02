@@ -1,0 +1,208 @@
+---
+import { Icon } from "astro-icon/components";
+import { getI18N } from "@/i18n";
+import MagneticButton from "@/components/ui/MagneticButton.astro";
+import GlassCard from "@/components/ui/GlassCard.astro";
+
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+
+const personalImageAlt = "Bryan Vela";
+const linkedinUrl = "https://www.linkedin.com/in/bdvela/";
+const githubUrl = "https://github.com/bdvela";
+
+const stats = [
+    { value: "5+", label: i18n.HERO.STATS.YEARS, delay: 100 },
+    { value: "20+", label: i18n.HERO.STATS.PROJECTS, delay: 200 },
+    { value: "100%", label: i18n.HERO.STATS.CLIENTS, delay: 300 },
+];
+---
+
+<section class="min-h-screen flex items-center justify-center py-24 md:py-32">
+    <div class="container max-w-6xl mx-auto px-4">
+        <!-- Bento Grid Hero -->
+        <div class="grid grid-cols-12 gap-4 md:gap-6">
+            <!-- Main Hero Card -->
+            <GlassCard
+                class="col-span-12 lg:col-span-8 row-span-2"
+                padding="lg"
+                gradient="from-accent-purple/10 via-transparent to-accent-blue/10"
+            >
+                <!-- Status badge -->
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-8 animate-fade-in"
+                >
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                        ></span>
+                        <span
+                            class="relative inline-flex rounded-full h-2 w-2 bg-green-500"
+                        ></span>
+                    </span>
+                    <span class="text-sm text-green-400 font-medium"
+                        >{i18n.HERO.STATUS_AVAILABLE}</span
+                    >
+                </div>
+
+                <!-- Main heading with stagger animation -->
+                <h1
+                    class="text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] mb-6"
+                >
+                    <span class="block text-white overflow-hidden">
+                        <span
+                            class="inline-block animate-fade-in-up"
+                            style="animation-delay: 100ms">Bryan</span
+                        >
+                    </span>
+                    <span class="block gradient-text overflow-hidden">
+                        <span
+                            class="inline-block animate-fade-in-up"
+                            style="animation-delay: 200ms">Vela</span
+                        >
+                    </span>
+                </h1>
+
+                <!-- Role with typing effect -->
+                <p
+                    class="text-xl md:text-2xl text-dark-300 font-light mb-8 max-w-lg animate-fade-in"
+                    style="animation-delay: 400ms"
+                >
+                    {i18n.HERO.ROLE_PART_1}
+                    <span class="text-white font-medium relative">
+                        {i18n.HERO.ROLE_PART_2}
+                        <span
+                            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent-purple to-accent-cyan"
+                        ></span>
+                    </span>
+                    {i18n.HERO.ROLE_PART_3}
+                </p>
+
+                <!-- CTA Buttons -->
+                <div
+                    class="flex flex-wrap gap-4 animate-fade-in"
+                    style="animation-delay: 600ms"
+                >
+                    <MagneticButton
+                        href={i18n.HERO.LINK_CTA}
+                        variant="primary"
+                        size="lg"
+                    >
+                        <Icon name="mdi:whatsapp" class="size-5" />
+                        {i18n.HERO.CTA}
+                    </MagneticButton>
+
+                    <MagneticButton
+                        href={`/CV/${i18n.HERO.CV}`}
+                        variant="secondary"
+                        size="lg"
+                    >
+                        <Icon name="mdi:download" class="size-5" />
+                        {i18n.HERO.DOWNLOAD_CV}
+                    </MagneticButton>
+                </div>
+            </GlassCard>
+
+            <!-- Profile Photo Card -->
+            <div
+                class="col-span-12 sm:col-span-6 lg:col-span-4 row-span-2 relative overflow-hidden rounded-3xl group animate-fade-in"
+                style="animation-delay: 300ms"
+            >
+                <!-- Image -->
+                <img
+                    src="/me.jpg"
+                    alt={personalImageAlt}
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                <!-- Gradient overlay -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/30 to-transparent"
+                >
+                </div>
+
+                <!-- Floating social links -->
+                <div class="absolute bottom-6 left-6 right-6 z-20">
+                    <GlassCard class="!rounded-2xl" padding="sm">
+                        <div class="flex gap-3 justify-center">
+                            <a
+                                href={linkedinUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl
+                  hover:bg-blue-600 text-dark-300 hover:text-white transition-all duration-300"
+                                aria-label="LinkedIn"
+                            >
+                                <Icon name="mdi:linkedin" class="size-5" />
+                                <span
+                                    class="text-sm font-medium hidden sm:inline"
+                                    >LinkedIn</span
+                                >
+                            </a>
+                            <div class="w-px bg-dark-700"></div>
+                            <a
+                                href={githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl
+                  hover:bg-dark-700 text-dark-300 hover:text-white transition-all duration-300"
+                                aria-label="GitHub"
+                            >
+                                <Icon name="mdi:github" class="size-5" />
+                                <span
+                                    class="text-sm font-medium hidden sm:inline"
+                                    >GitHub</span
+                                >
+                            </a>
+                        </div>
+                    </GlassCard>
+                </div>
+
+                <!-- Corner decoration -->
+                <div
+                    class="absolute top-4 right-4 w-20 h-20 border-t-2 border-r-2 border-accent-purple/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                >
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            {
+                stats.map((stat) => (
+                    <GlassCard
+                        class="col-span-6 sm:col-span-4 text-center animate-fade-in-up"
+                        padding="md"
+                        style={`animation-delay: ${stat.delay + 400}ms`}
+                    >
+                        <span class="block text-4xl md:text-5xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">
+                            {stat.value}
+                        </span>
+                        <span class="text-sm text-dark-400">{stat.label}</span>
+                    </GlassCard>
+                ))
+            }
+        </div>
+
+        <!-- Scroll indicator -->
+        <div
+            class="flex justify-center mt-16 animate-fade-in"
+            style="animation-delay: 1000ms"
+        >
+            <a
+                href="#experiencia"
+                class="flex flex-col items-center gap-2 text-dark-500 hover:text-white transition-colors group"
+            >
+                <span class="text-xs uppercase tracking-widest">Scroll</span>
+                <div class="relative">
+                    <Icon
+                        name="mdi:chevron-down"
+                        class="size-6 animate-bounce-subtle"
+                    />
+                    <div
+                        class="absolute inset-0 blur-md bg-accent-purple/50 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
