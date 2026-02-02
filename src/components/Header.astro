@@ -141,6 +141,13 @@ const navItems = [
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* Fix for scroll/menu conflict */
+  #main-header.menu-open {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border-color: transparent !important;
+  }
 </style>
 
 <script>
@@ -164,6 +171,7 @@ const navItems = [
     menuBtn?.addEventListener("click", () => {
       menuBtn.classList.toggle("active");
       mobileMenu?.classList.toggle("open");
+      header?.classList.toggle("menu-open"); // Toggle class on header
       document.body.style.overflow = mobileMenu?.classList.contains("open")
         ? "hidden"
         : "";
@@ -174,6 +182,7 @@ const navItems = [
       link.addEventListener("click", () => {
         menuBtn?.classList.remove("active");
         mobileMenu?.classList.remove("open");
+        header?.classList.remove("menu-open");
         document.body.style.overflow = "";
       });
     });
