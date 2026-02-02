@@ -8,6 +8,7 @@ interface Props {
     hover?: boolean;
     gradient?: string;
     padding?: "sm" | "md" | "lg" | "none";
+    [key: string]: any;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
     hover = true,
     gradient,
     padding = "md",
+    ...rest
 } = Astro.props;
 
 const paddings = {
@@ -27,6 +29,7 @@ const paddings = {
 
 <div
     class={`glass-card group relative overflow-hidden rounded-3xl ${paddings[padding]} ${className}`}
+    {...rest}
 >
     <!-- Background gradient on hover -->
     {

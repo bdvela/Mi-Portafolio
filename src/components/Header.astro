@@ -1,7 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 import LanguagePicker from "@/components/LanguagePicker.astro";
-import { Icon } from "astro-icon/components";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);

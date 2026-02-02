@@ -1,6 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components';
-const THEMES = ["light", "dark"];
+import { Icon } from "astro-icon/components";
 ---
 
 <div class="relative ml-1 mr-1">
@@ -9,8 +8,17 @@ const THEMES = ["light", "dark"];
     class="appearance-none border-none flex hover:scale-125 transition mx-2"
   >
     <span class="sr-only">Elige el tema</span>
-    <Icon id="light" name="mdi:white-balance-sunny" class="theme-toggle-icon size-5 transition-all" style="display: none;" />
-    <Icon id="dark" name="mdi:moon-waning-crescent" class="theme-toggle-icon size-5 transition-all" />
+    <Icon
+      id="light"
+      name="mdi:white-balance-sunny"
+      class="theme-toggle-icon size-5 transition-all"
+      style="display: none;"
+    />
+    <Icon
+      id="dark"
+      name="mdi:moon-waning-crescent"
+      class="theme-toggle-icon size-5 transition-all"
+    />
   </button>
 </div>
 
@@ -24,12 +32,14 @@ const THEMES = ["light", "dark"];
 </style>
 
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     updateTheme();
-    document.getElementById('theme-toggle-btn').addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleTheme();
-    });
+    document
+      .getElementById("theme-toggle-btn")
+      .addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleTheme();
+      });
   });
 
   const getThemePreference = () => {
@@ -41,7 +51,10 @@ const THEMES = ["light", "dark"];
 
   const updateTheme = () => {
     const themePreference = getThemePreference();
-    document.documentElement.classList.toggle('dark', themePreference === "dark");
+    document.documentElement.classList.toggle(
+      "dark",
+      themePreference === "dark",
+    );
     updateIcon(themePreference);
   };
 

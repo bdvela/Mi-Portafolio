@@ -250,9 +250,9 @@ const { currentLocale } = Astro;
     <script is:inline>
       // Initialize Lenis
       const initLenis = () => {
-        if (typeof Lenis === "undefined") return;
+        if (typeof window["Lenis"] === "undefined") return;
 
-        const lenis = new Lenis({
+        const lenis = new window["Lenis"]({
           lerp: 0.1, // Lower values = smoother/slower effect
           smoothWheel: true,
         });
@@ -300,8 +300,10 @@ const { currentLocale } = Astro;
             currentX += (mouseX - currentX) * 0.08;
             currentY += (mouseY - currentY) * 0.08;
 
-            cursorGlow.style.left = `${currentX - 300}px`;
-            cursorGlow.style.top = `${currentY - 300}px`;
+            if (cursorGlow) {
+              cursorGlow.style.left = `${currentX - 300}px`;
+              cursorGlow.style.top = `${currentY - 300}px`;
+            }
 
             requestAnimationFrame(animateCursor);
           }
