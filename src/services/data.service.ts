@@ -386,9 +386,9 @@ export class PortfolioService {
 
     static async getDashboardStats(): Promise<{ projects: number, experience: number, testimonials: number }> {
         const [projects, experience, testimonials] = await Promise.all([
-            supabase.from('projects').select('*', { count: 'exact', head: true }),
-            supabase.from('experience').select('*', { count: 'exact', head: true }),
-            supabase.from('testimonials').select('*', { count: 'exact', head: true })
+            supabase.from('projects').select('*', { count: 'exact', head: true }).eq('lang', 'es'),
+            supabase.from('experience').select('*', { count: 'exact', head: true }).eq('lang', 'es'),
+            supabase.from('testimonials').select('*', { count: 'exact', head: true }).eq('lang', 'es')
         ]);
 
         return {
