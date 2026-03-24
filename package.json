@@ -1,5 +1,5 @@
 {
-  "name": "mnt-ephemeral-template-cache-72-b7eb81c550051952ddb045d0464610d2a03ed0904a5eacc3d0ec513cdc02a4-out",
+  "name": "bdvela-portfolio",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -10,17 +10,18 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.7.0",
-    "@astrojs/netlify": "^5.2.1",
-    "@astrojs/tailwind": "^5.1.0",
-    "@fontsource-variable/onest": "^5.0.4",
-    "@supabase/supabase-js": "^2.100.0",
-    "astro": "^4.9.1",
-    "astro-icon": "^1.1.0",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "@astrojs/check": "0.7.0",
+    "@astrojs/tailwind": "5.1.0",
+    "@astrojs/vercel": "7.6.0",
+    "@fontsource-variable/onest": "5.0.4",
+    "@supabase/supabase-js": "2.42.0",
+    "astro": "4.16.19",
+    "astro-icon": "^1.1.5",
+    "sharp": "0.34.0",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.4.5"
   },
   "devDependencies": {
-    "@iconify-json/mdi": "^1.1.66"
+    "@iconify-json/mdi": "1.1.66"
   }
 }

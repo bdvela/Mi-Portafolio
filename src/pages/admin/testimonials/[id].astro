@@ -47,9 +47,9 @@ const shared = {
 ---
 
 <AdminLayout title={isNew ? "Nuevo Testimonio (Unificado)" : "Editar Testimonio (Unificado)"}>
-    <div class="flex">
+    <div class="flex flex-col lg:flex-row min-h-screen">
         <Sidebar />
-        <main class="flex-1 p-8">
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 min-w-0">
             <header class="mb-8">
                 <h1 class="text-3xl font-bold text-white">{isNew ? "Nuevo Testimonio" : "Editar Testimonio"}</h1>
                 <p class="text-gray-400 mt-2">Configura el testimonio fácilmente.</p>
