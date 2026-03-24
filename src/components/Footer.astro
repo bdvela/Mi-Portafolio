@@ -6,36 +6,53 @@ import MagneticButton from "@/components/ui/MagneticButton.astro";
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 const currentYear = new Date().getFullYear();
+import { PortfolioService } from "@/services/data.service";
 
-const linkedinUrl = "https://www.linkedin.com/in/bdvela/";
-const githubUrl = "https://github.com/bdvela";
+const globalSettings = await PortfolioService.getGlobalSettings();
+const email = globalSettings?.email || "";
+const phone = globalSettings?.phone || "";
+const cleanPhone = phone.replace(/\D/g, "");
+const whatsappUrl = globalSettings?.whatsapp_url || (cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}` : "");
+const brandName = globalSettings?.brand_name || "bdvela";
 
 const socialLinks = [
   {
-    href: linkedinUrl,
+    href: globalSettings?.linkedin_url || "",
     icon: "mdi:linkedin",
     label: "LinkedIn",
     hoverBg: "hover:bg-blue-600",
   },
   {
-    href: githubUrl,
+    href: globalSettings?.github_url || "",
     icon: "mdi:github",
     label: "GitHub",
     hoverBg: "hover:bg-dark-600",
   },
   {
-    href: "mailto:bdvela@icloud.com",
+    href: email ? `mailto:${email}` : "",
     icon: "mdi:email-outline",
     label: "Email",
     hoverBg: "hover:bg-accent-purple",
   },
   {
-    href: i18n.HERO.LINK_CTA,
+    href: globalSettings?.instagram_url || "",
+    icon: "mdi:instagram",
+    label: "Instagram",
+    hoverBg: "hover:bg-rose-600",
+  },
+  {
+    href: globalSettings?.facebook_url || "",
+    icon: "mdi:facebook",
+    label: "Facebook",
+    hoverBg: "hover:bg-blue-700",
+  },
+  {
+    href: whatsappUrl,
     icon: "mdi:whatsapp",
     label: "WhatsApp",
     hoverBg: "hover:bg-green-600",
   },
-];
+].filter(link => link.href);
 ---
 
 <footer class="relative py-24 mt-20">
@@ -65,13 +82,13 @@ const socialLinks = [
       </p>
 
       <div class="flex flex-wrap justify-center gap-4">
-        <MagneticButton href={i18n.HERO.LINK_CTA} variant="primary" size="lg">
+        <MagneticButton href={whatsappUrl} variant="primary" size="lg">
           <Icon name="mdi:whatsapp" class="size-5" />
           {i18n.FOOTER.BUTTON_WHATSAPP}
         </MagneticButton>
 
         <MagneticButton
-          href="mailto:bdvela@icloud.com"
+          href={`mailto:${email}`}
           variant="secondary"
           size="lg"
         >
@@ -87,7 +104,7 @@ const socialLinks = [
     >
       <!-- Brand -->
       <div class="flex flex-col items-center md:items-start gap-1">
-        <span class="text-2xl font-bold gradient-text">bdvela</span>
+        <span class="text-2xl font-bold gradient-text">{brandName}</span>
         <span class="text-sm text-dark-500">{i18n.FOOTER.ROLE}</span>
       </div>
 
@@ -114,7 +131,7 @@ const socialLinks = [
       <!-- Copyright -->
       <div class="text-center md:text-right">
         <p class="text-sm text-dark-500">
-          © {currentYear} Bryan Vela
+          © {currentYear} {brandName}
         </p>
         <p
           class="text-xs text-dark-600 mt-1 flex items-center gap-1 justify-center md:justify-end"

@@ -3,19 +3,88 @@ import { Icon } from "astro-icon/components";
 import { getI18N } from "@/i18n";
 import MagneticButton from "@/components/ui/MagneticButton.astro";
 import GlassCard from "@/components/ui/GlassCard.astro";
+import { PortfolioService } from "@/services/data.service";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
-const personalImageAlt = "Bryan Vela";
-const linkedinUrl = "https://www.linkedin.com/in/bdvela/";
-const githubUrl = "https://github.com/bdvela";
+const dbHero = await PortfolioService.getHero(currentLocale || "es");
+const globalSettings = await PortfolioService.getGlobalSettings();
 
-const stats = [
-    { value: "5+", label: i18n.HERO.STATS.YEARS, delay: 100 },
-    { value: "20+", label: i18n.HERO.STATS.PROJECTS, delay: 200 },
-    { value: "100%", label: i18n.HERO.STATS.CLIENTS, delay: 300 },
-];
+const phone = globalSettings?.phone || "";
+const cleanPhone = phone.replace(/\D/g, "");
+const defaultWhatsApp = cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}` : "";
+
+const heroData = {
+    shortDescription: dbHero?.short_description || i18n.HERO.SHORT_DESCRIPTION,
+    longDescription: dbHero?.long_description || i18n.HERO.LONG_DESCRIPTION,
+    ctaText: dbHero?.cta_text || i18n.HERO.CTA,
+    // Prioritize Global Settings for the contact link
+    ctaLink: globalSettings?.whatsapp_url || defaultWhatsApp || dbHero?.cta_link || i18n.HERO.LINK_CTA,
+    // CV handling: Prioritize language-specific global settings, then legacy global, then hero-specific, then i18n default
+    cvUrl: (currentLocale === 'en' ? globalSettings?.resume_url_en : globalSettings?.resume_url_es) 
+        || globalSettings?.resume_url 
+        || dbHero?.cv_url 
+        || i18n.HERO.CV,
+    statusAvailable: dbHero?.status_available ?? true,
+};
+
+const brandName = globalSettings?.brand_name || "bdvela";
+const personalImageAlt = brandName;
+const linkedinUrl = globalSettings?.linkedin_url || "";
+const githubUrl = globalSettings?.github_url || "";
+const email = globalSettings?.email || "";
+const whatsappUrl = globalSettings?.whatsapp_url || defaultWhatsApp;
+
+const socialLinks = [
+  {
+    href: linkedinUrl,
+    icon: "mdi:linkedin",
+    label: "LinkedIn",
+    hoverBg: "hover:bg-blue-600",
+  },
+  {
+    href: githubUrl,
+    icon: "mdi:github",
+    label: "GitHub",
+    hoverBg: "hover:bg-dark-600",
+  },
+  {
+    href: email ? `mailto:${email}` : "",
+    icon: "mdi:email-outline",
+    label: "Email",
+    hoverBg: "hover:bg-accent-purple",
+  },
+  {
+    href: globalSettings?.instagram_url || "",
+    icon: "mdi:instagram",
+    label: "Instagram",
+    hoverBg: "hover:bg-rose-600",
+  },
+  {
+    href: globalSettings?.facebook_url || "",
+    icon: "mdi:facebook",
+    label: "Facebook",
+    hoverBg: "hover:bg-blue-700",
+  },
+  {
+    href: whatsappUrl,
+    icon: "mdi:whatsapp",
+    label: "WhatsApp",
+    hoverBg: "hover:bg-green-600",
+  },
+].filter(link => link.href);
+
+const stats = (dbHero?.stats_json && dbHero.stats_json.length > 0)
+    ? dbHero.stats_json.map((s: any, i: number) => ({ ...s, delay: (i + 1) * 100 }))
+    : [
+        { value: "5+", label: i18n.HERO.STATS.YEARS, delay: 100 },
+        { value: "20+", label: i18n.HERO.STATS.PROJECTS, delay: 200 },
+        { value: "100%", label: i18n.HERO.STATS.CLIENTS, delay: 300 },
+    ];
 ---
 
 <section class="min-h-screen flex items-center justify-center py-24 md:py-32">
@@ -29,21 +98,19 @@ const stats = [
                 gradient="from-accent-purple/10 via-transparent to-accent-blue/10"
             >
                 <!-- Status badge -->
-                <div
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-8 animate-fade-in"
-                >
-                    <span class="relative flex h-2 w-2">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-                        ></span>
-                        <span
-                            class="relative inline-flex rounded-full h-2 w-2 bg-green-500"
-                        ></span>
-                    </span>
-                    <span class="text-sm text-green-400 font-medium"
-                        >{i18n.HERO.STATUS_AVAILABLE}</span
-                    >
-                </div>
+                {
+                    heroData.statusAvailable && (
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-8 animate-fade-in">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                            </span>
+                            <span class="text-sm text-green-400 font-medium">
+                                {i18n.HERO.STATUS_AVAILABLE}
+                            </span>
+                        </div>
+                    )
+                }
 
                 <!-- Main heading with stagger animation -->
                 <h1
@@ -67,16 +134,8 @@ const stats = [
                 <p
                     class="text-xl md:text-2xl text-dark-300 font-light mb-8 max-w-lg animate-fade-in"
                     style="animation-delay: 400ms"
-                >
-                    {i18n.HERO.ROLE_PART_1}
-                    <span class="text-white font-medium relative">
-                        {i18n.HERO.ROLE_PART_2}
-                        <span
-                            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent-purple to-accent-cyan"
-                        ></span>
-                    </span>
-                    {i18n.HERO.ROLE_PART_3}
-                </p>
+                    set:html={heroData.longDescription}
+                />
 
                 <!-- CTA Buttons -->
                 <div
@@ -84,16 +143,18 @@ const stats = [
                     style="animation-delay: 600ms"
                 >
                     <MagneticButton
-                        href={i18n.HERO.LINK_CTA}
+                        href={heroData.ctaLink}
                         variant="primary"
                         size="lg"
                     >
                         <Icon name="mdi:whatsapp" class="size-5" />
-                        {i18n.HERO.CTA}
+                        {heroData.ctaText}
                     </MagneticButton>
 
                     <MagneticButton
-                        href={`/CV/${i18n.HERO.CV}`}
+                        href={heroData.cvUrl.startsWith("http")
+                            ? heroData.cvUrl
+                            : `/CV/${heroData.cvUrl}`}
                         variant="secondary"
                         size="lg"
                     >
@@ -110,7 +171,7 @@ const stats = [
             >
                 <!-- Image -->
                 <img
-                    src="/me.jpg"
+                    src={dbHero?.image_url || "/me.jpg"}
                     alt={personalImageAlt}
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -167,7 +228,7 @@ const stats = [
 
             <!-- Stats Cards -->
             {
-                stats.map((stat) => (
+                stats.map((stat: any) => (
                     <GlassCard
                         class="col-span-6 sm:col-span-4 text-center animate-fade-in-up"
                         padding="md"

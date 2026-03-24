@@ -1,0 +1,189 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import MagneticButton from "@/components/ui/MagneticButton.astro";
+import { PortfolioService } from "@/services/data.service";
+import type { ProjectData } from "@/models/portfolio";
+import { Icon } from "astro-icon/components";
+
+const { id } = Astro.params;
+const isNew = id === "new";
+
+let projectEs: ProjectData = {
+    lang: "es",
+    title: "",
+    subtitle: "",
+    description: "",
+    link: "",
+    github: "",
+    image: "",
+    tags: [],
+    order_index: 0,
+};
+
+let projectEn: ProjectData = {
+    lang: "en",
+    title: "",
+    subtitle: "",
+    description: "",
+    link: "",
+    github: "",
+    image: "",
+    tags: [],
+    order_index: 0,
+};
+
+if (!isNew && id) {
+    const primary = await PortfolioService.getProjectById(id);
+    if (primary) {
+        if (primary.group_id) {
+            const group = await PortfolioService.getProjectGroup(primary.group_id);
+            projectEs = group.find(p => p.lang === 'es') || { ...primary, lang: 'es', id: undefined };
+            projectEn = group.find(p => p.lang === 'en') || { ...primary, lang: 'en', id: undefined };
+        } else {
+            // Migración rápida: si no tiene group_id, lo tratamos como el base
+            if (primary.lang === 'es') projectEs = primary;
+            else projectEn = primary;
+        }
+    } else {
+        return Astro.redirect("/admin/projects");
+    }
+}
+
+// Ensure shared fields are synced for the view
+const shared = {
+    link: projectEs.link || projectEn.link,
+    github: projectEs.github || projectEn.github,
+    image: projectEs.image || projectEn.image,
+    tags: projectEs.tags.length > 0 ? projectEs.tags : projectEn.tags,
+    order_index: projectEs.order_index || projectEn.order_index,
+    featured: projectEs.featured || projectEn.featured,
+    is_new: projectEs.is_new || projectEn.is_new,
+    group_id: projectEs.group_id || projectEn.group_id
+};
+---
+
+<AdminLayout title={isNew ? "Nuevo Proyecto" : "Editar Proyecto"}>
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="mb-8">
+                <a href="/admin/projects" class="text-sm text-gray-400 hover:text-white mb-4 inline-block">← Volver a proyectos</a>
+                <h1 class="text-3xl font-bold text-white">{isNew ? "Nuevo Proyecto" : "Editar Proyecto"}</h1>
+            </header>
+
+            <form action="/admin/api/projects/upsert-unified" method="POST" enctype="multipart/form-data" class="max-w-5xl space-y-12 bg-white/5 p-8 rounded-2xl border border-white/10">
+                <input type="hidden" name="group_id" value={shared.group_id} />
+                <input type="hidden" name="id_es" value={projectEs.id} />
+                <input type="hidden" name="id_en" value={projectEn.id} />
+                
+                <!-- Shared Metadata Section -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-semibold text-white border-b border-white/10 pb-2">Configuración Compartida</h2>
+                    <div class="space-y-8">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Imagen del Proyecto</label>
+                                <div class="space-y-4">
+                                    {shared.image && (
+                                        <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-white/10">
+                                            <img src={shared.image} alt="Preview" class="w-full h-full object-cover" />
+                                            <input type="hidden" name="current_image" value={shared.image} />
+                                        </div>
+                                    )}
+                                <div class="space-y-4">
+                                    <div class="relative group">
+                                        <input type="file" name="image_file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                                        <div class="px-6 py-4 rounded-xl bg-purple-600/10 border border-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center gap-3 group-hover:bg-purple-600/20 transition-all">
+                                            <Icon name="mdi:image-plus-outline" class="size-6" />
+                                            {shared.image ? "Cambiar Imagen del Proyecto" : "Subir Imagen del Proyecto"}
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="image_url" value={shared.image} />
+                                    <p class="text-[10px] text-gray-500 text-center italic">Se recomienda una relación de aspecto de 16:9 (ej: 1920x1080)</p>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2 italic text-purple-400">Enlace del Proyecto (Demo)</label>
+                                    <input type="url" name="link" value={shared.link} class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none transition-all" placeholder="https://..." />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2 italic text-blue-400">Repositorio GitHub</label>
+                                    <input type="url" name="github" value={shared.github} class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all" placeholder="https://github.com/..." />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Tags (separados por coma)</label>
+                                <input type="text" name="tags" value={shared.tags.join(", ")} class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none" placeholder="React, Node.js..." />
+                            </div>
+                            <div class="grid grid-cols-2 gap-6 items-end">
+                                <div class="relative group">
+                                    <label class="block text-[11px] uppercase tracking-wider font-bold text-gray-500 mb-2">Posición (Orden)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="number" name="order_index" value={shared.order_index} 
+                                            class="w-24 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-center focus:ring-2 focus:ring-purple-500/50 outline-none transition-all" 
+                                        />
+                                        <span class="text-[10px] text-gray-500 italic max-w-[120px] leading-tight group-hover:text-gray-400 transition-colors">Menor número = Más arriba en la lista</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-6 pb-2">
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="featured" checked={shared.featured} class="peer sr-only" />
+                                            <div class="w-5 h-5 border-2 border-white/20 rounded-md peer-checked:bg-purple-600 peer-checked:border-purple-600 transition-all"></div>
+                                            <Icon name="mdi:check" class="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity left-0.5" />
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">Destacado</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" name="is_new" checked={shared.is_new} class="peer sr-only" />
+                                            <div class="w-5 h-5 border-2 border-white/20 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all"></div>
+                                            <Icon name="mdi:check" class="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity left-0.5" />
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">Nuevo</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spanish Content -->
+                <div class="space-y-6">
+                    <!-- Spanish Section -->
+                    <div class="space-y-6 p-6 bg-purple-500/5 rounded-2xl border border-purple-500/10">
+                        <div class="flex items-center gap-2 mb-4">
+                            <h2 class="text-xl font-bold text-purple-400">Detalles del Proyecto</h2>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Título</label>
+                            <input type="text" name="title_es" value={projectEs.title} required class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Subtítulo</label>
+                            <input type="text" name="subtitle_es" value={projectEs.subtitle} required class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Descripción</label>
+                            <textarea name="description_es" rows="6" required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none">{projectEs.description}</textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end gap-4 pt-8">
+                    <a href="/admin/projects" class="px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-all font-medium">Cancelar</a>
+                    <MagneticButton type="submit" class="px-12 py-3 shadow-lg shadow-purple-500/20">
+                        {isNew ? "Crear Proyecto" : "Guardar Cambios"}
+                    </MagneticButton>
+                </div>
+            </form>
+        </main>
+    </div>
+</AdminLayout>

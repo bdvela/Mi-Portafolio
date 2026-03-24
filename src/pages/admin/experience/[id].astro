@@ -1,0 +1,138 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import MagneticButton from "@/components/ui/MagneticButton.astro";
+import { PortfolioService } from "@/services/data.service";
+import type { ExperienceData } from "@/models/portfolio";
+
+const { id } = Astro.params;
+const isNew = id === "new";
+
+let experienceEs: ExperienceData = {
+    lang: "es",
+    date: "",
+    title: "",
+    company: "",
+    description: "",
+    current: false,
+    link: "",
+    order_index: 0,
+    group_id: ""
+};
+
+let experienceEn: ExperienceData = {
+    lang: "en",
+    date: "",
+    title: "",
+    company: "",
+    description: "",
+    current: false,
+    link: "",
+    order_index: 0,
+    group_id: ""
+};
+
+if (!isNew && id) {
+    const primary = await PortfolioService.getExperienceById(id);
+    if (primary) {
+        if (primary.group_id) {
+            const group = await PortfolioService.getExperienceGroup(primary.group_id);
+            experienceEs = group.find(e => e.lang === 'es') || { ...primary, lang: 'es', id: undefined };
+            experienceEn = group.find(e => e.lang === 'en') || { ...primary, lang: 'en', id: undefined };
+        } else {
+            if (primary.lang === 'es') experienceEs = primary;
+            else experienceEn = primary;
+        }
+    } else {
+        return Astro.redirect("/admin/experience");
+    }
+}
+
+const shared = {
+    date: experienceEs.date || experienceEn.date || "",
+    company: experienceEs.company || experienceEn.company || "",
+    link: experienceEs.link || experienceEn.link || "",
+    current: experienceEs.current || experienceEn.current || false,
+    order_index: experienceEs.order_index ?? experienceEn.order_index ?? 0,
+    group_id: experienceEs.group_id || experienceEn.group_id || ""
+};
+---
+
+<AdminLayout title={isNew ? "Nueva Experiencia" : "Editar Experiencia"}>
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-white">{isNew ? "Nueva Experiencia" : "Editar Experiencia"}</h1>
+            </header>
+
+            <form action="/admin/api/experience/upsert-unified" method="POST" class="max-w-5xl bg-white/5 p-8 rounded-2xl border border-white/10 space-y-12">
+                <input type="hidden" name="group_id" value={shared.group_id} />
+                <input type="hidden" name="id_es" value={experienceEs.id} />
+                <input type="hidden" name="id_en" value={experienceEn.id} />
+                
+                <!-- Shared Metadata Section -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-semibold text-white border-b border-white/10 pb-2">Configuración Compartida</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Empresa</label>
+                                <input type="text" name="company" value={shared.company} required class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-blue-500/50" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Fecha / Tiempo</label>
+                                <input type="text" name="date" value={shared.date} required class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-blue-500/50" placeholder="Ene 2023 - Presente" />
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Link (Opcional)</label>
+                                <input type="text" name="link" value={shared.link} class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-blue-500/50" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Orden</label>
+                                    <input type="number" name="order_index" value={shared.order_index} class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-blue-500/50" />
+                                </div>
+                                <div class="flex items-end pb-2">
+                                    <label class="flex items-center text-gray-300 cursor-pointer">
+                                        <input type="checkbox" name="current" checked={shared.current} class="w-4 h-4 text-blue-600 bg-white/5 border-white/10 rounded focus:ring-blue-500/50 mr-2" />
+                                        <span class="text-sm">Trabajo actual</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spanish Content -->
+                <div class="space-y-6">
+                    <!-- Spanish Section -->
+                    <div class="space-y-6 p-6 bg-purple-500/5 rounded-2xl border border-purple-500/10">
+                        <div class="flex items-center gap-2 mb-4">
+                            <h2 class="text-xl font-bold text-purple-400">Detalles de la Experiencia</h2>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Título / Cargo</label>
+                            <input type="text" name="title_es" value={experienceEs.title} required class="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Descripción</label>
+                            <textarea name="description_es" rows="6" required class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-purple-500/50 outline-none">{experienceEs.description}</textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end gap-4 pt-8">
+                    <a href="/admin/experience" class="px-6 py-3 rounded-xl text-gray-400 hover:text-white transition-all font-medium">Cancelar</a>
+                    <MagneticButton type="submit" class="px-12 py-3 shadow-lg shadow-purple-500/20">
+                        {isNew ? "Crear Nueva Experiencia" : "Guardar Cambios"}
+                    </MagneticButton>
+                </div>
+            </form>
+        </main>
+    </div>
+</AdminLayout>

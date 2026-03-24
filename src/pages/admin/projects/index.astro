@@ -1,0 +1,90 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import { Icon } from "astro-icon/components";
+import { PortfolioService } from "@/services/data.service";
+
+const allProjects = await PortfolioService.getAllProjects();
+
+// Agrupar por group_id
+const groups = allProjects.reduce((acc: Record<string, any>, project) => {
+    const key = (project.group_id || project.id || 'unknown').toString();
+    if (!acc[key]) {
+        acc[key] = {
+            id: project.id,
+            group_id: project.group_id,
+            title: project.title,
+            subtitle: project.subtitle,
+            image: project.image,
+            langs: []
+        };
+    }
+    acc[key].langs.push(project.lang);
+    // Priorizar título en español si está disponible para la lista
+    if (project.lang === 'es') {
+        acc[key].title = project.title;
+        acc[key].subtitle = project.subtitle;
+    }
+    return acc;
+}, {});
+
+const projectGroups = Object.values(groups);
+---
+
+<AdminLayout title="Gestionar Proyectos">
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Proyectos</h1>
+                    <p class="text-gray-400 mt-2">Administra los proyectos de tu portafolio.</p>
+                </div>
+                <a
+                    href="/admin/projects/new"
+                    class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl font-medium transition-all"
+                >
+                    + Nuevo Proyecto
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 gap-6">
+                {projectGroups.length === 0 && <p class="text-gray-500 italic">No tienes proyectos creados todavía.</p>}
+                {projectGroups.map((group: any) => (
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center transition-all hover:bg-white/10 group">
+                        <div class="flex items-center space-x-6">
+                            <div class="w-24 h-16 rounded-xl bg-gray-800 overflow-hidden border border-white/5 shadow-inner">
+                                {group.image ? (
+                                    <img src={group.image} alt={group.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                ) : (
+                                    <div class="w-full h-full flex items-center justify-center text-gray-600">
+                                        <Icon name="mdi:image-outline" class="size-6" />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">{group.title}</h3>
+                                <p class="text-sm text-gray-400">{group.subtitle}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <a 
+                                href={`/admin/projects/${group.id}`} 
+                                class="px-4 py-2 text-sm font-semibold text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 hover:border-white/20"
+                            >
+                                Editar
+                            </a>
+                            <form action="/admin/api/projects/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este proyecto?')">
+                                <input type="hidden" name="id" value={group.id} />
+                                <input type="hidden" name="group_id" value={group.group_id} />
+                                <button type="submit" class="p-2 text-red-400 hover:bg-red-400/10 rounded-xl transition-all border border-transparent hover:border-red-400/20">
+                                    <Icon name="mdi:trash-can-outline" class="size-5" />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </main>
+    </div>
+</AdminLayout>

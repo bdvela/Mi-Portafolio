@@ -1,0 +1,141 @@
+---
+import { Icon } from "astro-icon/components";
+const { url } = Astro;
+const pathname = url.pathname;
+
+const menuItems = [
+    { name: "Dashboard", icon: "mdi:view-dashboard-outline", href: "/admin" },
+    {
+        name: "Sección Hero",
+        icon: "mdi:account-star-outline",
+        href: "/admin/hero",
+    },
+    {
+        name: "Experiencia",
+        icon: "mdi:briefcase-outline",
+        href: "/admin/experience",
+    },
+    {
+        name: "Proyectos",
+        icon: "mdi:folder-multiple-outline",
+        href: "/admin/projects",
+    },
+    {
+        name: "Testimonios",
+        icon: "mdi:comment-quote-outline",
+        href: "/admin/testimonials",
+    },
+    {
+        name: "Sobre mí",
+        icon: "mdi:account-details-outline",
+        href: "/admin/about",
+    },
+    { name: "Configuraciones", icon: "mdi:cog", href: "/admin/settings" },
+];
+---
+
+<aside
+    id="admin-sidebar"
+    class="fixed inset-y-0 left-0 w-72 bg-[#05091e] border-r border-white/5 flex flex-col h-screen z-[60] -translate-x-full lg:translate-x-0 transition-transform duration-300 lg:sticky lg:top-0"
+>
+    <div class="px-8 py-10 border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="size-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] animate-pulse-subtle">
+                <Icon name="mdi:shield-crown-outline" class="size-6 text-white" />
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-white tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                    Control
+                </h2>
+                <p class="text-[9px] font-black text-purple-400/80 uppercase tracking-[0.2em]">
+                    Premium Suite
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="flex-1 p-6 space-y-2 overflow-y-auto custom-scrollbar">
+        {
+            menuItems.map((item) => {
+                const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/admin" && pathname.startsWith(item.href));
+                return (
+                    <a
+                        href={item.href}
+                        class={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${
+                            isActive
+                                ? "bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-white border border-white/10 shadow-xl shadow-black/20"
+                                : "text-gray-400 hover:bg-white/[0.03] border border-transparent hover:text-white"
+                        }`}
+                    >
+                        <Icon
+                            name={item.icon}
+                            class={`size-6 transition-transform duration-300 ${isActive ? "text-purple-400 scale-110" : "group-hover:scale-110"}`}
+                        />
+                        <span
+                            class={`font-black text-sm tracking-tight ${isActive ? "text-white" : "group-hover:text-white"}`}
+                        >
+                            {item.name}
+                        </span>
+                        {isActive && (
+                            <div class="ml-auto w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+                        )}
+                    </a>
+                );
+            })
+        }
+    </nav>
+
+    <div class="p-6 border-t border-white/5 space-y-3">
+        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 mb-2">
+            <div class="size-8 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg">
+                AD
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-white truncate">Administrador</p>
+                <p class="text-[9px] text-gray-500 truncate lowercase">Sesión Activa</p>
+            </div>
+        </div>
+
+        <a
+            href="/"
+            target="_blank"
+            class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all text-xs font-bold border border-white/10 shadow-sm"
+        >
+            <Icon name="mdi:web" class="size-4" />
+            Sitio Público
+        </a>
+        <a
+            href="/admin/api/signout"
+            class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-red-400/70 hover:text-white hover:bg-red-500/20 transition-all text-xs font-bold border border-red-500/10"
+        >
+            <Icon name="mdi:logout" class="size-4" />
+            Cerrar Sesión
+        </a>
+    </div>
+</aside>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes pulse-subtle {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.9; transform: scale(0.98); }
+    }
+    .animate-pulse-subtle {
+        animation: pulse-subtle 3s ease-in-out infinite;
+    }
+</style>

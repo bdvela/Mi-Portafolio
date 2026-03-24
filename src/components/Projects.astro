@@ -2,83 +2,26 @@
 import { getI18N } from "@/i18n";
 import SectionHeader from "@/components/ui/SectionHeader.astro";
 import ProjectCard from "@/components/ui/ProjectCard.astro";
+import { PortfolioService } from "@/services/data.service";
 import type { Project } from "@/types";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 
-const PROJECTS: Project[] = [
-  {
-    title: i18n.PROJECTS.PROJECT_NEW.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_NEW.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_NEW.DESCRIPTION,
-    link: "https://arazevallos.com",
-    image: "/ara_zevallos.png",
-    tags: ["Next.js 16", "Shopify", "Framer Motion", "Tailwind v4"],
-    featured: true,
-    new: true,
-    gradient: "from-pink-500/20 to-rose-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_1.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_1.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_1.DESCRIPTION,
-    link: "https://mofima.com/",
-    image: "/grupo-mofima.webp",
-    tags: ["Astro", "Tailwind"],
-    featured: true,
-    gradient: "from-amber-500/20 to-orange-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_2.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_2.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_2.DESCRIPTION,
-    link: "https://beizzon.com",
-    image: "/beizzon.webp",
-    tags: ["React", "Spring Boot", "Tailwind"],
-    featured: true,
-    gradient: "from-blue-500/20 to-cyan-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_3.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_3.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_3.DESCRIPTION,
-    image: "/chiringuito.webp",
-    link: "https://chiringuito.pe/",
-    tags: ["WordPress", "WooCommerce"],
-    gradient: "from-red-500/20 to-pink-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_4.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_4.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_4.DESCRIPTION,
-    image: "/retcamp_2022.webp",
-    link: "https://bdvela.github.io/cvc-retcamp/",
-    github: "https://github.com/bdvela/cvc-retcamp",
-    tags: ["JavaScript", "FullPage.js"],
-    gradient: "from-purple-500/20 to-indigo-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_5.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_5.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_5.DESCRIPTION,
-    image: "/diswallet.webp",
-    link: "https://diswallet-sx62.web.app/",
-    github: "https://github.com/bdvela/DISWALLET",
-    tags: ["Vue.js", "Firebase"],
-    gradient: "from-green-500/20 to-emerald-500/20",
-  },
-  {
-    title: i18n.PROJECTS.PROJECT_6.TITLE,
-    subtitle: i18n.PROJECTS.PROJECT_6.SUBTITLE,
-    description: i18n.PROJECTS.PROJECT_6.DESCRIPTION,
-    image: "/task_manager.webp",
-    link: "https://agenda-3c731.web.app/",
-    github: "https://github.com/bdvela/Task-Manager",
-    tags: ["Vue.js", "Firebase"],
-    gradient: "from-violet-500/20 to-purple-500/20",
-  },
-];
+const dbProjects = await PortfolioService.getProjects(currentLocale || "es");
+
+const PROJECTS: Project[] = dbProjects.map(p => ({
+  title: p.title,
+  subtitle: p.subtitle,
+  description: p.description,
+  link: p.link,
+  github: p.github,
+  image: p.image,
+  tags: p.tags,
+  featured: p.featured,
+  new: p.is_new,
+  gradient: p.gradient || "from-purple-500/20 to-blue-500/20",
+}));
 ---
 
 <section id="proyectos" class="py-32">

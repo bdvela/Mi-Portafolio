@@ -2,41 +2,43 @@
 import { Icon } from "astro-icon/components";
 import { getI18N } from "@/i18n";
 import GlassCard from "@/components/ui/GlassCard.astro";
+import { PortfolioService } from "@/services/data.service";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 
-const skills = [
-  {
-    label: i18n.ABOUT.SKILLS.FRONTEND,
-    icon: "mdi:palette",
-    color: "accent-purple",
-  },
-  {
-    label: i18n.ABOUT.SKILLS.BACKEND,
-    icon: "mdi:database",
-    color: "accent-blue",
-  },
-  {
-    label: i18n.ABOUT.SKILLS.SAP,
-    icon: "mdi:office-building",
-    color: "accent-cyan",
-  },
-  { label: i18n.ABOUT.SKILLS.UIUX, icon: "mdi:brush", color: "accent-pink" },
+const dbAbout = await PortfolioService.getAbout(currentLocale || "es");
+const globalSettings = await PortfolioService.getGlobalSettings();
+const brandName = globalSettings?.brand_name || "bdvela";
+
+const dbSkills = Array.isArray(dbAbout?.skills_json) ? dbAbout.skills_json : [
+  { key: "FRONTEND", label: dbAbout?.skills_json?.FRONTEND || i18n.ABOUT.SKILLS.FRONTEND, icon: "mdi:palette-swatch-outline", color: "purple" },
+  { key: "BACKEND", label: dbAbout?.skills_json?.BACKEND || i18n.ABOUT.SKILLS.BACKEND, icon: "mdi:xml", color: "blue" },
+  { key: "SAP", label: dbAbout?.skills_json?.SAP || i18n.ABOUT.SKILLS.SAP, icon: "mdi:layers-triple-outline", color: "cyan" },
+  { key: "UIUX", label: dbAbout?.skills_json?.UIUX || i18n.ABOUT.SKILLS.UIUX, icon: "mdi:vector-bezier", color: "pink" },
 ];
 
-const highlights = [
-  {
-    icon: "mdi:trophy",
-    title: i18n.ABOUT.HIGHLIGHTS.TROPHY,
-    subtitle: i18n.ABOUT.HIGHLIGHTS.TROPHY_SUB,
-  },
-  {
-    icon: "mdi:school",
-    title: i18n.ABOUT.HIGHLIGHTS.DEGREE,
-    subtitle: i18n.ABOUT.HIGHLIGHTS.DEGREE_SUB,
-  },
-];
+const colorMap: Record<string, string> = {
+  purple: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+  blue: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+  cyan: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+  pink: "text-pink-400 bg-pink-500/10 border-pink-500/20",
+  orange: "text-orange-400 bg-orange-500/10 border-orange-500/20",
+  green: "text-green-400 bg-green-500/10 border-green-500/20",
+};
+
+const aboutData = {
+  description: dbAbout?.description_1 || `${i18n.ABOUT.DESCRIPTION_1}\n\n${i18n.ABOUT.DESCRIPTION_2}\n\n${i18n.ABOUT.DESCRIPTION_3}`,
+  skills: dbSkills,
+  highlights: [
+    { icon: "mdi:trophy-variant-outline", title: dbAbout?.highlights_json?.TROPHY || i18n.ABOUT.HIGHLIGHTS.TROPHY, subtitle: dbAbout?.highlights_json?.TROPHY_SUB || i18n.ABOUT.HIGHLIGHTS.TROPHY_SUB, color: "from-purple-500/20 to-indigo-500/20" },
+    { icon: "mdi:school-outline", title: dbAbout?.highlights_json?.DEGREE || i18n.ABOUT.HIGHLIGHTS.DEGREE, subtitle: dbAbout?.highlights_json?.DEGREE_SUB || i18n.ABOUT.HIGHLIGHTS.DEGREE_SUB, color: "from-blue-500/20 to-cyan-500/20" },
+  ],
+  values: {
+    faith: dbAbout?.values_json?.FAITH_CODE || i18n.ABOUT.VALUES.FAITH_CODE,
+    location: dbAbout?.values_json?.LOCATION || i18n.ABOUT.VALUES.LOCATION,
+  }
+};
 ---
 
 <section id="sobre-mi" class="py-32">
@@ -56,8 +58,8 @@ const highlights = [
             class="relative overflow-hidden rounded-3xl border border-dark-700/50"
           >
             <img
-              src="/bdvela.webp"
-              alt="Bryan Vela"
+              src={dbAbout?.profile_image_url || "/bdvela.webp"}
+              alt={brandName}
               class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105"
             />
 
@@ -68,27 +70,29 @@ const highlights = [
             </div>
 
             <!-- Highlight badges -->
-            <div class="absolute bottom-0 left-0 right-0 p-4 space-y-3">
+            <div class="absolute bottom-6 left-6 right-6 space-y-3">
               {
-                highlights.map((item) => (
-                  <GlassCard class="!rounded-xl" padding="sm">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center shrink-0">
+                aboutData.highlights.map((item) => (
+                  <div class={`relative overflow-hidden group/card p-[1px] rounded-2xl bg-gradient-to-r ${item.color} backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:border-white/20`}>
+                    <div class="flex items-center gap-4 p-3 bg-[#05091e]/40 rounded-[15px]">
+                      <div class={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border group-hover/card:scale-110 transition-transform ${item.color.includes("purple") ? "bg-purple-500/10 border-purple-500/20" : item.color.includes("blue") ? "bg-blue-500/10 border-blue-500/20" : "bg-white/5 border-white/10"}`}>
                         <Icon
                           name={item.icon}
-                          class="size-5 text-accent-purple"
+                          class="size-5 text-white/90"
                         />
                       </div>
                       <div class="min-w-0">
-                        <p class="text-sm font-semibold text-white truncate">
+                        <p class="text-sm font-bold text-white tracking-tight">
                           {item.title}
                         </p>
-                        <p class="text-xs text-dark-400 truncate">
+                        <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
                           {item.subtitle}
                         </p>
                       </div>
                     </div>
-                  </GlassCard>
+                    {/* Inner glow effect */}
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity"></div>
+                  </div>
                 ))
               }
             </div>
@@ -125,31 +129,32 @@ const highlights = [
         </h2>
 
         <!-- Bio text -->
-        <div class="space-y-6 text-lg text-dark-300 leading-relaxed mb-10">
-          <p set:html={i18n.ABOUT.DESCRIPTION_1} />
-          <p set:html={i18n.ABOUT.DESCRIPTION_2} />
-          <p set:html={i18n.ABOUT.DESCRIPTION_3} />
+        <div class="space-y-6 text-lg text-dark-300 leading-relaxed mb-10 whitespace-pre-line">
+          <p set:html={aboutData.description} />
         </div>
 
         <!-- Skills grid -->
         <div
-          class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10 stagger-children"
+          class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12 stagger-children"
         >
           {
-            skills.map((skill) => (
-              <GlassCard class="text-center" padding="md">
-                <div
-                  class={`w-12 h-12 rounded-xl bg-${skill.color}/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}
-                >
-                  <Icon
-                    name={skill.icon}
-                    class={`size-6 text-${skill.color}`}
-                  />
+            aboutData.skills.map((skill: any) => (
+              <div class="group/skill relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-tr from-white/10 to-transparent rounded-2xl blur opacity-0 group-hover/skill:opacity-100 transition duration-500"></div>
+                <div class="relative bg-white/5 border border-white/10 p-5 rounded-2xl flex flex-col items-center text-center transition-all duration-500 group-hover/skill:bg-white/[0.08] group-hover/skill:-translate-y-2">
+                  <div
+                    class={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 border group-hover/skill:scale-110 group-hover/skill:rotate-3 transition-transform duration-500 ${colorMap[skill.color] || colorMap.blue}`}
+                  >
+                    <Icon
+                      name={skill.icon || 'mdi:star'}
+                      class="size-6"
+                    />
+                  </div>
+                  <span class="text-xs font-bold text-gray-300 uppercase tracking-widest group-hover/skill:text-white transition-colors">
+                    {skill.label}
+                  </span>
                 </div>
-                <span class="text-sm text-dark-300 font-medium">
-                  {skill.label}
-                </span>
-              </GlassCard>
+              </div>
             ))
           }
         </div>
@@ -157,13 +162,13 @@ const highlights = [
         <!-- Personal values -->
         <div class="flex items-center gap-6 text-dark-500">
           <div class="flex items-center gap-2">
-            <Icon name="jesus" class="size-5" />
-            <span>{i18n.ABOUT.VALUES.FAITH_CODE}</span>
+            <Icon name="mdi:hands-pray" class="size-5" />
+            <span>{aboutData.values.faith}</span>
           </div>
           <div class="w-px h-4 bg-dark-700"></div>
           <div class="flex items-center gap-2">
             <span>🇵🇪</span>
-            <span>{i18n.ABOUT.VALUES.LOCATION}</span>
+            <span>{aboutData.values.location}</span>
           </div>
         </div>
       </div>

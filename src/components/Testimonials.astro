@@ -2,11 +2,19 @@
 import { getI18N } from "@/i18n";
 import GlassCard from "@/components/ui/GlassCard.astro";
 import { Icon } from "astro-icon/components";
+import { PortfolioService } from "@/services/data.service";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 
-const REVIEWS = [
+const dbTestimonials = await PortfolioService.getTestimonials(currentLocale || "es");
+
+const REVIEWS = dbTestimonials.length > 0 ? dbTestimonials.map(t => ({
+    text: t.review,
+    author: t.author,
+    company: t.company,
+    initial: t.author.substring(0, 2).toUpperCase(),
+})) : [
     {
         text: i18n.TESTIMONIALS.REVIEW_1,
         author: i18n.TESTIMONIALS.AUTHOR_1,

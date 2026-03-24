@@ -6,14 +6,16 @@ import type { ExperienceItem } from "@/types";
 interface Props {
     job: ExperienceItem;
     index: number;
+    isLast?: boolean;
+    isSingle?: boolean;
 }
 
-const { job, index } = Astro.props;
+const { job, index, isLast = false, isSingle = false } = Astro.props;
 const isEven = index % 2 === 0;
 ---
 
 <div
-    class={`relative flex flex-col md:flex-row gap-8 md:gap-16 reveal ${!isEven ? "md:flex-row-reverse" : ""}`}
+    class={`relative flex flex-col md:flex-row gap-8 md:gap-16 reveal ${!isEven && !isSingle ? "md:flex-row-reverse" : ""} ${isSingle ? "md:max-w-3xl md:mx-auto" : ""}`}
     style={`animation-delay: ${index * 150}ms`}
 >
     <!-- Timeline dot -->
@@ -29,11 +31,11 @@ const isEven = index % 2 === 0;
 
     <!-- Content -->
     <div
-        class={`flex-1 ml-12 md:ml-0 ${isEven ? "md:text-right md:pr-20" : "md:pl-20"}`}
+        class={`flex-1 ml-12 md:ml-0 ${isSingle ? "md:text-center" : isEven ? "md:text-right md:pr-20" : "md:pl-20"}`}
     >
         <GlassCard padding="md">
             <!-- Date badge -->
-            <div class={`flex ${isEven ? "md:justify-end" : "justify-start"}`}>
+            <div class={`flex ${isSingle ? "md:justify-center" : isEven ? "md:justify-end" : "justify-start"}`}>
                 <span
                     class={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-4
             ${
@@ -58,18 +60,18 @@ const isEven = index % 2 === 0;
             </h3>
 
             <p
-                class={`text-accent-purple mb-4 font-medium flex items-center gap-2 ${isEven ? "md:justify-end" : ""}`}
+                class={`text-accent-purple mb-4 font-medium flex items-center gap-2 ${isSingle ? "md:justify-center" : isEven ? "md:justify-end" : ""}`}
             >
                 <Icon name="mdi:office-building" class="size-4" />
                 {job.company}
             </p>
 
-            <p class="text-dark-400 leading-relaxed">
+            <p class={`text-dark-400 leading-relaxed ${isSingle ? "md:text-center" : ""}`}>
                 {job.description}
             </p>
         </GlassCard>
     </div>
 
     <!-- Empty space for timeline alignment -->
-    <div class="hidden md:block flex-1"></div>
+    { !isSingle && <div class="hidden md:block flex-1"></div> }
 </div>

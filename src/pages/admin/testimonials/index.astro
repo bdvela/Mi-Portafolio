@@ -1,0 +1,129 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import { Icon } from "astro-icon/components";
+import { PortfolioService } from "@/services/data.service";
+
+const allTestimonials = await PortfolioService.getAllTestimonials();
+
+const groups = allTestimonials.reduce((acc: Record<string, any>, t) => {
+    const key = (t.group_id || t.id || "unknown").toString();
+    if (!acc[key]) {
+        acc[key] = {
+            id: t.id,
+            group_id: t.group_id,
+            author: t.author,
+            company: t.company,
+            review: t.review,
+            langs: [],
+        };
+    }
+    acc[key].langs.push(t.lang);
+    if (t.lang === "es") {
+        acc[key].author = t.author;
+        acc[key].company = t.company;
+        acc[key].review = t.review;
+    }
+    return acc;
+}, {});
+
+const testimonialGroups = Object.values(groups);
+---
+
+<AdminLayout title="Gestionar Testimonios">
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Testimonios</h1>
+                    <p class="text-gray-400 mt-2">¿Qué dicen tus clientes?</p>
+                </div>
+                <a
+                    href="/admin/testimonials/new"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-all"
+                >
+                    + Nuevo Testimonio
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {
+                    testimonialGroups.length === 0 && (
+                        <p class="text-gray-500 italic md:col-span-2">
+                            No tienes testimonios todavía.
+                        </p>
+                    )
+                }
+                {
+                    testimonialGroups.map((group: any) => (
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col justify-between transition-all hover:bg-white/10 group relative">
+                            <div>
+                                <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-400 mb-4 border border-blue-500/20">
+                                    <Icon
+                                        name="mdi:format-quote-open"
+                                        class="size-6"
+                                    />
+                                </div>
+                                <p class="text-gray-300 italic mb-6 text-sm line-clamp-4 leading-relaxed">
+                                    "{group.review}"
+                                </p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                                        {group.author.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-sm">
+                                            {group.author}
+                                        </h3>
+                                        <p class="text-[11px] text-gray-500">
+                                            {group.company}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-6 pt-6 border-t border-white/5">
+                                <a
+                                    href={`/admin/testimonials/${group.id}`}
+                                    class="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                                >
+                                    <Icon
+                                        name="mdi:pencil-outline"
+                                        class="size-4"
+                                    />
+                                    Editar
+                                </a>
+                                <form
+                                    action="/admin/api/testimonials/delete"
+                                    method="POST"
+                                    onsubmit="return confirm('¿Estás seguro de eliminar este testimonio?')"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value={group.id}
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="group_id"
+                                        value={group.group_id}
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                                    >
+                                        <Icon
+                                            name="mdi:trash-can-outline"
+                                            class="size-5"
+                                        />
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </main>
+    </div>
+</AdminLayout>

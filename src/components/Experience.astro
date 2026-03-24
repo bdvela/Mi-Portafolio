@@ -2,43 +2,29 @@
 import { getI18N } from "@/i18n";
 import SectionHeader from "@/components/ui/SectionHeader.astro";
 import ExperienceItem from "@/components/ui/ExperienceItem.astro";
-import type { ExperienceItem as ExperienceItemType } from "@/types";
+import { PortfolioService } from "@/services/data.service";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 
-const EXPERIENCE: ExperienceItemType[] = [
-  {
-    date: i18n.EXPERIENCE.JOB_1.TIME,
-    title: i18n.EXPERIENCE.JOB_1.TITLE,
-    company: i18n.EXPERIENCE.JOB_1.SUBTITLE,
-    description: i18n.EXPERIENCE.JOB_1.DESCRIPTION,
-    current: true,
-  },
-  {
-    date: i18n.EXPERIENCE.JOB_2.TIME,
-    title: i18n.EXPERIENCE.JOB_2.TITLE,
-    company: i18n.EXPERIENCE.JOB_2.SUBTITLE,
-    description: i18n.EXPERIENCE.JOB_2.DESCRIPTION,
-    current: true,
-  },
-  {
-    date: i18n.EXPERIENCE.JOB_3.TIME,
-    title: i18n.EXPERIENCE.JOB_3.TITLE,
-    company: i18n.EXPERIENCE.JOB_3.SUBTITLE,
-    description: i18n.EXPERIENCE.JOB_3.DESCRIPTION,
-  },
-];
+const dbExperience = await PortfolioService.getExperience(currentLocale || "es");
+
+const EXPERIENCE = dbExperience.map(exp => ({
+  date: exp.date,
+  title: exp.title,
+  company: exp.company,
+  description: exp.description,
+  current: exp.current,
+  link: exp.link,
+}));
 ---
 
 <section id="experiencia" class="py-32">
   <div class="container max-w-6xl mx-auto px-4">
     <SectionHeader
-      badge={i18n.EXPERIENCE.BADGE}
+      badge="Trayectoria"
       badgeColor="blue"
-      title={i18n.EXPERIENCE.SECTION_TITLE.replace("Profesional", "")
-        .replace("Work", "")
-        .trim()}
+      title={i18n.EXPERIENCE.SECTION_TITLE}
       highlight={i18n.EXPERIENCE.TITLE_HIGHLIGHT}
       description={i18n.EXPERIENCE.DESCRIPTION}
     />
@@ -62,7 +48,12 @@ const EXPERIENCE: ExperienceItemType[] = [
       <div class="space-y-16">
         {
           EXPERIENCE.map((job, index) => (
-            <ExperienceItem job={job} index={index} />
+            <ExperienceItem 
+              job={job} 
+              index={index} 
+              isLast={index === EXPERIENCE.length - 1}
+              isSingle={EXPERIENCE.length === 1}
+            />
           ))
         }
       </div>

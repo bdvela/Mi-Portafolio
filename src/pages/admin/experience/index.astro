@@ -1,0 +1,83 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import { Icon } from "astro-icon/components";
+import { PortfolioService } from "@/services/data.service";
+
+const allExperience = await PortfolioService.getAllExperience();
+
+const groups = allExperience.reduce((acc: Record<string, any>, exp) => {
+    const key = (exp.group_id || exp.id || 'unknown').toString();
+    if (!acc[key]) {
+        acc[key] = {
+            id: exp.id,
+            group_id: exp.group_id,
+            title: exp.title,
+            company: exp.company,
+            date: exp.date,
+            langs: []
+        };
+    }
+    acc[key].langs.push(exp.lang);
+    if (exp.lang === 'es') {
+        acc[key].title = exp.title;
+        acc[key].company = exp.company;
+        acc[key].date = exp.date;
+    }
+    return acc;
+}, {});
+
+const experienceGroups = Object.values(groups);
+---
+
+<AdminLayout title="Gestionar Experiencia">
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Experiencia</h1>
+                    <p class="text-gray-400 mt-2">Administra tu trayectoria profesional.</p>
+                </div>
+                <a
+                    href="/admin/experience/new"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-all"
+                >
+                    + Nueva Experiencia
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 gap-6">
+                {experienceGroups.length === 0 && <p class="text-gray-500 italic">No tienes experiencia registrada todavía.</p>}
+                {experienceGroups.map((group: any) => (
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center transition-all hover:bg-white/10 group">
+                        <div class="flex items-center space-x-6">
+                            <div class="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+                                <Icon name="mdi:briefcase-outline" class="size-6" />
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">{group.title}</h3>
+                                <p class="text-sm text-gray-400">{group.company} | {group.date}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <a 
+                                href={`/admin/experience/${group.id}`} 
+                                class="px-4 py-2 text-sm font-semibold text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 hover:border-white/20"
+                            >
+                                Editar
+                            </a>
+                            <form action="/admin/api/experience/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta experiencia?')">
+                                <input type="hidden" name="id" value={group.id} />
+                                <input type="hidden" name="group_id" value={group.group_id} />
+                                <button type="submit" class="p-2 text-red-400 hover:bg-red-400/10 rounded-xl transition-all border border-transparent hover:border-red-400/20">
+                                    <Icon name="mdi:trash-can-outline" class="size-5" />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </main>
+    </div>
+</AdminLayout>

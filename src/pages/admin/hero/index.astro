@@ -1,0 +1,166 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Sidebar from "@/components/admin/Sidebar.astro";
+import MagneticButton from "@/components/ui/MagneticButton.astro";
+import { Icon } from "astro-icon/components";
+import { PortfolioService } from "@/services/data.service";
+import type { HeroData } from "@/models/portfolio";
+
+const heroEs = await PortfolioService.getHero("es") || { 
+    lang: "es", 
+    short_description: "", 
+    long_description: "", 
+    cta_text: "", 
+    cta_link: "", 
+    cv_url: "", 
+    status_available: true 
+};
+
+const heroEn = await PortfolioService.getHero("en") || { 
+    lang: "en", 
+    short_description: "", 
+    long_description: "", 
+    cta_text: "", 
+    cta_link: "", 
+    cv_url: "", 
+    status_available: true 
+};
+
+const shared = {
+    image_url: heroEs.image_url || heroEn.image_url || "",
+    cv_url: heroEs.cv_url || heroEn.cv_url || "",
+    status_available: heroEs.status_available ?? heroEn.status_available ?? true
+};
+---
+
+<AdminLayout title="Gestionar Hero (Unificado)">
+    <div class="flex">
+        <Sidebar />
+        <main class="flex-1 p-8">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-white">Sección Hero</h1>
+                <p class="text-gray-400 mt-2">Configura el mensaje principal de tu portafolio.</p>
+            </header>
+
+            <form action="/admin/api/hero/upsert-unified" method="POST" enctype="multipart/form-data" class="max-w-6xl space-y-8 pb-20">
+                
+                <!-- Imagen y Disponibilidad -->
+                <section class="bg-white/5 p-8 rounded-2xl border border-white/10 space-y-8">
+                    <h2 class="text-xl font-bold text-blue-400 flex items-center gap-2">
+                        <Icon name="mdi:account-eye-outline" class="size-6" />
+                        Imagen y Disponibilidad
+                    </h2>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <!-- Estado de Disponibilidad -->
+                        <div class="flex items-center justify-between p-6 rounded-2xl bg-white/[0.03] border border-white/10 group">
+                            <div class="flex items-center gap-4">
+                                <div class="size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 border border-green-500/20">
+                                    <Icon name="mdi:calendar-check" class="size-5" />
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-white text-sm tracking-tight">Estado de Disponibilidad</h3>
+                                    <p class="text-[10px] text-gray-500 font-medium uppercase tracking-widest mt-0.5">Visible en la sección Hero</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer group-active:scale-95 transition-transform">
+                                <input type="checkbox" name="status_available" class="sr-only peer" checked={shared.status_available}>
+                                <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 shadow-inner"></div>
+                            </label>
+                        </div>
+
+                        <!-- Imagen de Perfil -->
+                        <div class="p-6 rounded-xl bg-white/5 border border-white/10 flex items-center gap-6">
+                            <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white/10 shrink-0 bg-white/5">
+                                {shared.image_url ? (
+                                    <img src={shared.image_url} alt="Hero Profile" class="w-full h-full object-cover" />
+                                ) : (
+                                    <div class="w-full h-full flex items-center justify-center text-gray-600">
+                                        <Icon name="mdi:account" class="size-10" />
+                                    </div>
+                                )}
+                            </div>
+                            <div class="flex-1 space-y-3">
+                                <div class="relative group">
+                                    <input type="file" name="hero_image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                                    <div class="px-4 py-2 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold flex items-center justify-center gap-2 group-hover:bg-blue-600/20 transition-all">
+                                        <Icon name="mdi:upload" class="size-4" />
+                                        Subir Foto
+                                    </div>
+                                </div>
+                                <input type="hidden" name="image_url" value={shared.image_url} />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contenido (Español) -->
+                <div class="space-y-8">
+                    <!-- Español -->
+                    <section class="bg-white/5 p-8 rounded-2xl border border-purple-500/20 space-y-6 relative overflow-hidden">
+                        <h2 class="text-xl font-bold text-purple-400 flex items-center gap-2">
+                             Contenido Principal
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div class="group">
+                                <label class="block text-xs font-black text-purple-400/60 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-purple-400 transition-colors">Descripción Corta</label>
+                                <input type="text" name="short_description_es" value={heroEs.short_description} class="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all shadow-xl" placeholder="Full Stack Developer..." />
+                            </div>
+                            <div class="group">
+                                <label class="block text-xs font-black text-purple-400/60 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-purple-400 transition-colors">Descripción Larga</label>
+                                <textarea name="long_description_es" rows="5" class="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-medium outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all shadow-xl leading-relaxed">{heroEs.long_description}</textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="group">
+                                    <label class="block text-xs font-black text-purple-400/60 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-purple-400 transition-colors">Texto Botón</label>
+                                    <input type="text" name="cta_text_es" value={heroEs.cta_text} class="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all shadow-xl" />
+                                </div>
+                                <div class="group">
+                                    <label class="block text-xs font-black text-purple-400/60 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-purple-400 transition-colors">Link Botón</label>
+                                    <input type="text" name="cta_link_es" value={heroEs.cta_link} class="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-mono text-sm outline-none focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all shadow-xl" />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Estadísticas -->
+                    <section class="bg-white/5 p-8 rounded-2xl border border-blue-500/20 space-y-6">
+                        <h2 class="text-xl font-bold text-blue-400 flex items-center gap-2">
+                             Estadísticas (Hero Stats)
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           {[0, 1, 2].map((i) => (
+                             <div class="p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">
+                               <div class="flex items-center gap-2 mb-2">
+                                  <span class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold">#{i+1}</span>
+                                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Estadística</span>
+                               </div>
+                               <div>
+                                   <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Valor (ej: 5+)</label>
+                                   <input type="text" name={`stat_value_${i}_es`} value={heroEs.stats_json?.[i]?.value || ""} class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-mono text-sm focus:ring-2 focus:ring-blue-500/30 outline-none transition-all" placeholder="5+" />
+                               </div>
+                               <div>
+                                   <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Etiqueta (ES)</label>
+                                   <input type="text" name={`stat_label_${i}_es`} value={heroEs.stats_json?.[i]?.label || ""} class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:ring-2 focus:ring-blue-500/30 outline-none transition-all" placeholder="Años de experiencia" />
+                               </div>
+                               {/* Hidden English labels handled by auto-translate if empty */}
+                               <input type="hidden" name={`stat_label_${i}_en`} value={heroEn.stats_json?.[i]?.label || ""} />
+                             </div>
+                           ))}
+                        </div>
+                        <p class="text-[10px] text-gray-500 italic mt-4">Los textos en inglés se generarán automáticamente si los dejas en blanco.</p>
+                    </section>
+
+                </div>
+
+                <div class="flex justify-end gap-6 pt-8 border-t border-white/10">
+                    <MagneticButton type="submit" class="px-12 py-4">
+                        Guardar Cambios
+                    </MagneticButton>
+                </div>
+            </form>
+        </main>
+    </div>
+</AdminLayout>

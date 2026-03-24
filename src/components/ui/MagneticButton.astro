@@ -1,13 +1,17 @@
 ---
+import Spinner from "./Spinner.astro";
+
 /**
  * MagneticButton Component
  * Creates a button with magnetic cursor attraction effect
  */
-interface Props {
+interface Props extends astroHTML.JSX.HTMLAttributes {
     href?: string;
     class?: string;
     variant?: "primary" | "secondary" | "ghost";
     size?: "sm" | "md" | "lg";
+    isLoading?: boolean;
+    type?: "button" | "submit" | "reset";
 }
 
 const {
@@ -15,6 +19,9 @@ const {
     class: className = "",
     variant = "primary",
     size = "md",
+    isLoading = false,
+    type = "button",
+    ...rest
 } = Astro.props;
 
 const Tag = href ? "a" : "button";
@@ -35,16 +42,25 @@ const sizes = {
 ---
 
 <Tag
-    href={href}
-    class={`magnetic-btn relative inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all duration-300 ${variants[variant]} ${sizes[size]} ${className}`}
+    href={isLoading ? undefined : href}
+    type={Tag === "button" ? type : undefined}
+    disabled={isLoading}
+    class={`magnetic-btn relative inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all duration-300 ${variants[variant]} ${sizes[size]} ${className} ${isLoading ? "cursor-wait opacity-80" : ""}`}
     target={href?.startsWith("http") ? "_blank" : undefined}
     rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+    {...rest}
 >
-    <span class="magnetic-content relative z-10 flex items-center gap-2">
+    <span class={`magnetic-content relative z-10 flex items-center gap-2 transition-opacity duration-300 ${isLoading ? "opacity-0 invisible" : "opacity-100 visible"}`}>
         <slot />
     </span>
-    <span class="magnetic-ripple absolute inset-0 rounded-full opacity-0"
-    ></span>
+    
+    {isLoading && (
+        <div class="absolute inset-0 flex items-center justify-center z-20">
+            <Spinner size={size === "sm" ? "sm" : "md"} />
+        </div>
+    )}
+
+    <span class="magnetic-ripple absolute inset-0 rounded-full opacity-0"></span>
 </Tag>
 
 <style>

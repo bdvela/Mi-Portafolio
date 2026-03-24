@@ -4,6 +4,11 @@ import LanguagePicker from "@/components/LanguagePicker.astro";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+import { PortfolioService } from "@/services/data.service";
+
+const globalSettings = await PortfolioService.getGlobalSettings();
+const email = globalSettings?.email || "";
+const brandName = globalSettings?.brand_name || "bdvela";
 
 const navItems = [
   { title: t("header.experience"), url: "#experiencia" },
@@ -22,7 +27,7 @@ const navItems = [
       href="/"
       class="text-xl font-bold hover:opacity-70 transition-opacity relative z-50"
     >
-      <span class="gradient-text">bdvela</span>
+      <span class="gradient-text">{brandName}</span>
     </a>
 
     <!-- Desktop Navigation -->
@@ -44,7 +49,7 @@ const navItems = [
     <!-- Desktop Actions -->
     <div class="hidden md:flex items-center gap-4">
       <a
-        href="mailto:bdvela@icloud.com"
+        href={`mailto:${email}`}
         class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
           bg-white text-dark-950 hover:bg-accent-purple hover:text-white transition-all duration-300"
       >
@@ -96,7 +101,7 @@ const navItems = [
         style="transition-delay: 300ms"
       >
         <a
-          href="mailto:bdvela@icloud.com"
+          href={`mailto:${email}`}
           class="px-6 py-3 rounded-full text-lg font-medium bg-white text-dark-950"
         >
           {t("header.contact")}
@@ -108,7 +113,7 @@ const navItems = [
       <div
         class="absolute bottom-10 left-1/2 -translate-x-1/2 text-dark-700 text-sm"
       >
-        © 2024 Bryan Vela
+        © 2024 {brandName}
       </div>
     </div>
   </div>

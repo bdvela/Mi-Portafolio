@@ -1,0 +1,58 @@
+---
+/**
+ * PageLoader Component
+ * Top-mounted progress bar that reacts to Astro View Transitions
+ */
+---
+
+<div id="page-progress-bar" class="fixed top-0 left-0 h-[3px] w-0 bg-gradient-to-r from-accent-purple via-accent-blue to-accent-cyan z-[9999] opacity-0 transition-opacity duration-300 pointer-events-none shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+
+<script>
+    let progress = 0;
+    let progressInterval: any;
+    const progressBar = document.getElementById('page-progress-bar');
+
+    const startLoading = () => {
+        if (!progressBar) return;
+        
+        progress = 0;
+        progressBar.style.width = '0%';
+        progressBar.style.opacity = '1';
+
+        progressInterval = setInterval(() => {
+            if (progress < 90) {
+                progress += Math.random() * 5;
+                progressBar.style.width = `${progress}%`;
+            }
+        }, 150);
+    };
+
+    const finishLoading = () => {
+        if (!progressBar) return;
+        
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        
+        setTimeout(() => {
+            progressBar.style.opacity = '0';
+            setTimeout(() => {
+                progressBar.style.width = '0%';
+            }, 300);
+        }, 200);
+    };
+
+    // Listen to Astro View Transition events
+    document.addEventListener('astro:before-preparation', startLoading);
+    document.addEventListener('astro:after-preparation', finishLoading);
+    
+    // Safety check for browser-back or other interrupts
+    document.addEventListener('astro:after-swap', () => {
+        if (progress < 100) finishLoading();
+    });
+</script>
+
+<style>
+    #page-progress-bar {
+        transition: width 0.3s ease-out, opacity 0.3s ease-in-out;
+    }
+</style>
