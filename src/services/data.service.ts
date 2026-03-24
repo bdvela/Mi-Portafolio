@@ -368,7 +368,7 @@ export class PortfolioService {
         const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
         const filePath = `${folder}/${fileName}`;
 
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
             .from('portfolio')
             .upload(filePath, file);
 

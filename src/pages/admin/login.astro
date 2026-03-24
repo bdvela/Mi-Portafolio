@@ -3,7 +3,7 @@ import AdminLayout from "../../layouts/AdminLayout.astro";
 import MagneticButton from "@/components/ui/MagneticButton.astro";
 import { Icon } from "astro-icon/components";
 
-const { cookies, redirect } = Astro;
+const { cookies } = Astro;
 
 const accessToken = cookies.get("sb-access-token");
 const refreshToken = cookies.get("sb-refresh-token");

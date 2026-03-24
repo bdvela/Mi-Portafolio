@@ -4,7 +4,8 @@ import Sidebar from "@/components/admin/Sidebar.astro";
 import MagneticButton from "@/components/ui/MagneticButton.astro";
 import { PortfolioService } from "@/services/data.service";
 import { Icon } from "astro-icon/components";
-import type { AboutData } from "@/models/portfolio";
+
+// removed unused AboutData import
 
 const aboutEs = await PortfolioService.getAbout("es") || { 
     lang: "es", 

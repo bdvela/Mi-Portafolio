@@ -41,7 +41,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
         image: imageUrl,
         tags,
         featured,
-        new: isNewProject,
+        is_new: isNewProject,
         order_index: orderIndex
     };
 

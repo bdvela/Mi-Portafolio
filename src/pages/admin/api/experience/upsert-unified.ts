@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { PortfolioService } from "@/services/data.service";
 import type { ExperienceData } from "@/models/portfolio";
 import { supabase } from "@/lib/supabase";
 import { TranslationService } from "@/services/translation.service";

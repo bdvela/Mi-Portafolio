@@ -4,7 +4,8 @@ import Sidebar from "@/components/admin/Sidebar.astro";
 import MagneticButton from "@/components/ui/MagneticButton.astro";
 import { Icon } from "astro-icon/components";
 import { PortfolioService } from "@/services/data.service";
-import type { HeroData } from "@/models/portfolio";
+
+// removed unused HeroData import
 
 const heroEs = await PortfolioService.getHero("es") || { 
     lang: "es", 

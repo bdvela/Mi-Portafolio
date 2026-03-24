@@ -10,7 +10,7 @@ interface Props {
     isSingle?: boolean;
 }
 
-const { job, index, isLast = false, isSingle = false } = Astro.props;
+const { job, index, isSingle = false } = Astro.props;
 const isEven = index % 2 === 0;
 ---
 

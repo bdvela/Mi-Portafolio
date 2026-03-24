@@ -9,7 +9,6 @@ import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 
 const dbHero = await PortfolioService.getHero(currentLocale || "es");
 const globalSettings = await PortfolioService.getGlobalSettings();
